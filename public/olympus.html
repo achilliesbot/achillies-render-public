@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8XZ094X6YT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-8XZ094X6YT");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olympus Network — Warrior Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"><style>
+:root{--flame:#ff6b35;--gold:#ffd700;--dark:#0d0705;--body:system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--dark);color:#e0d6cf;font-family:var(--body);min-height:100vh}
+.container{max-width:700px;margin:0 auto;padding:40px 20px}
+h1{color:var(--flame);font-size:24px;text-align:center;margin-bottom:8px}
+.subtitle{color:#888;text-align:center;font-size:13px;margin-bottom:30px}
+.card{background:rgba(255,107,53,0.05);border:1px solid rgba(255,107,53,0.15);border-radius:8px;padding:24px;margin-bottom:16px}
+.rank-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:12px}
+.RECRUIT{background:rgba(150,150,150,0.2);color:#aaa;border:1px solid #666}
+.HOPLITE{background:rgba(100,200,100,0.2);color:#6c6;border:1px solid #6c6}
+.MYRMIDION{background:rgba(100,100,255,0.2);color:#88f;border:1px solid #88f}
+.SPARTAN{background:rgba(255,215,0,0.2);color:var(--gold);border:1px solid var(--gold)}
+.OLYMPIAN{background:rgba(255,107,53,0.3);color:var(--flame);border:1px solid var(--flame)}
+.name{font-size:28px;color:#fff;font-weight:700;margin-bottom:4px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.stat{text-align:center;padding:12px;background:rgba(0,0,0,0.3);border-radius:6px}
+.stat .val{font-size:20px;color:var(--flame);font-weight:700}
+.stat .lbl{font-size:11px;color:#777;text-transform:uppercase;margin-top:4px}
+.progress{height:6px;background:#222;border-radius:3px;margin:12px 0;overflow:hidden}
+.progress .fill{height:100%;background:var(--flame);border-radius:3px;transition:width 0.5s}
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+.cat{display:flex;justify-content:space-between;font-size:13px;padding:6px 10px;background:rgba(0,0,0,0.2);border-radius:4px}
+.cat .n{color:var(--flame)}
+.ep{font-family:monospace;font-size:11px;color:#555;word-break:break-all;margin-top:12px}
+.army{text-align:center;margin-top:24px;padding:16px;border-top:1px solid rgba(255,107,53,0.1)}
+.army span{color:var(--flame);font-weight:700}
+a{color:var(--flame);text-decoration:none}
+.error{text-align:center;padding:60px 20px;color:#888}
+#loading{text-align:center;padding:60px;color:#555}
+
+    /* ============================================
+       Ancient Greek Temple Atmosphere — Overlay Only
+       ============================================ */
+    .ancient-room-bg {
+      position: fixed; inset: 0; z-index: -3; pointer-events: none;
+    }
+    .marble-floor {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=2000&q=60') repeat;
+      opacity: 0.06; mix-blend-mode: overlay;
+    }
+    .columns-layer {
+      position: absolute; inset: 0;
+      background: url('https://images.unsplash.com/photo-1555993539-1732b0258235?w=2000&q=60') center/cover no-repeat;
+      opacity: 0.08;
+    }
+    .torch-glow {
+      position: fixed; inset: 0; pointer-events: none; z-index: -2;
+      background: radial-gradient(circle at 50% 90%,
+        rgba(255,140,0,0.10), transparent 60%);
+    }
+    @keyframes torch-flicker {
+      0%,100% { text-shadow: 0 0 10px #ff8800, 0 0 20px #ff6600; }
+      33%     { text-shadow: 0 0 15px #ffaa00, 0 0 25px #ff8800; }
+      66%     { text-shadow: 0 0 8px #ff6600, 0 0 15px #ff4400; }
+    }
+    .reveal { opacity: 0; transform: translateY(30px);
+              transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .god-statue {
+      position: fixed; bottom: 0; width: 160px; opacity: 0.18;
+      filter: drop-shadow(0 0 12px rgba(255,140,0,0.4));
+      transition: opacity 0.6s ease, filter 0.6s ease;
+      pointer-events: none; z-index: 0;
+    }
+    .god-statue.left { left: 1%; }
+    .god-statue.right { right: 1%; transform: scaleX(-1); }
+    @media (max-width: 768px) {
+      .god-statue { display: none; }
+      .marble-floor, .columns-layer { opacity: 0.03; }
+    }
+
+    
+/* ========== RESPONSIVE — Mobile + Tablet ========== */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #ffd700;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+@media (max-width: 768px) {
+    nav { padding: 1rem !important; flex-wrap: wrap !important; gap: 0.5rem !important; }
+    .nav-toggle { display: block; }
+    .nav-links { display: none !important; width: 100%; flex-direction: column !important; gap: 0.75rem !important; padding: 0.75rem 0; border-top: 1px solid rgba(255,215,0,0.15); margin-top: 0.5rem; }
+    .nav-links.open { display: flex !important; }
+    .nav-links a { font-size: 0.8rem !important; padding: 0.25rem 0; }
+    .container { padding: 1.5rem 1rem !important; }
+    header h1 { font-size: clamp(0.7rem, 4vw, 1rem) !important; line-height: 1.8 !important; }
+    .hero-title { font-size: clamp(0.9rem, 5vw, 1.4rem) !important; }
+    .tagline, .hero-sub { font-size: 0.8rem !important; }
+    .stat-row, .hero-stats, .pnl-grid, .pillars, .products-grid { grid-template-columns: 1fr !important; gap: 0.75rem !important; }
+    .hero-stats { flex-direction: column !important; gap: 12px !important; }
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .code-block, .code, pre { overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: 0.7rem !important; }
+    .cta, .hero-ctas, .olympus-ctas { flex-direction: column !important; gap: 0.75rem !important; }
+    .cta a, .hero-ctas a, .olympus-ctas a, .btn-primary, .btn-secondary { text-align: center; width: 100%; }
+    section { padding: 1rem !important; margin: 1.5rem 0 !important; }
+    section h2, .section-title { font-size: 0.6rem !important; }
+    .ep-grid { grid-template-columns: 1fr !important; }
+    .terminal { min-height: 200px; }
+    footer .footer-links { flex-direction: column; gap: 8px; }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container { padding: 2rem 1.5rem !important; }
+    .stat-row, .pnl-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .nav-links a { font-size: 0.6rem !important; }
+    .products-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+</style>
+</head>
+<body>
+<div class="ancient-room-bg">
+  <div class="marble-floor"></div>
+  <div class="columns-layer parallax" data-speed="0.4"></div>
+  <div class="torch-glow"></div>
+</div>
+
+<div class="container">
+<h1>&#x2694;&#xFE0F; OLYMPUS NETWORK</h1>
+<p class="subtitle">Warrior Dashboard</p>
+<div id="loading">Loading warrior data...</div>
+<div id="content" style="display:none"></div>
+<div id="error" class="error" style="display:none"></div>
+<div class="army" id="army"></div>
+<p style="text-align:center;margin-top:20px;font-size:12px;color:#444">
+<a href="/">achillesalpha.onrender.com</a> | <a href="/ep">Execution Protocol</a>
+</p>
+</div>
+<script>
+const wid = window.location.pathname.split('/').pop();
+if(!wid||!wid.startsWith('wrr_')){
+document.getElementById('loading').style.display='none';
+document.getElementById('error').style.display='block';
+document.getElementById('error').innerHTML='<h2>Invalid Warrior ID</h2><p>Visit <a href="/loot">/loot</a> to deploy your warrior.</p>';
+}else{
+const thresholds={RECRUIT:10,HOPLITE:50,MYRMIDION:150,SPARTAN:500,OLYMPIAN:Infinity};
+const nextRank={RECRUIT:'HOPLITE',HOPLITE:'MYRMIDION',MYRMIDION:'SPARTAN',SPARTAN:'OLYMPIAN',OLYMPIAN:'OLYMPIAN'};
+fetch('/ep/warrior/'+wid).then(r=>r.json()).then(d=>{
+document.getElementById('loading').style.display='none';
+if(d.error){document.getElementById('error').style.display='block';document.getElementById('error').innerHTML='<h2>Warrior Not Found</h2>';return;}
+document.getElementById('content').style.display='block';
+const t=thresholds[d.rank]||10;const pct=Math.min(100,Math.round((d.contribution_count/t)*100));
+document.getElementById('content').innerHTML=`
+<div class="card">
+<span class="rank-badge ${d.rank}">${d.rank}</span>
+<div class="name">${d.warrior_name}</div>
+<div class="stat-grid">
+<div class="stat"><div class="val">${d.contribution_count}</div><div class="lbl">Contributions</div></div>
+<div class="stat"><div class="val">${d.rank_score||0}</div><div class="lbl">Score</div></div>
+<div class="stat"><div class="val">${d.trade_count||0}</div><div class="lbl">Trades</div></div>
+</div>
+<div style="font-size:12px;color:#777">Progress to ${nextRank[d.rank]}: ${d.contribution_count}/${t}</div>
+<div class="progress"><div class="fill" style="width:${pct}%"></div></div>
+<div class="cats">
+<div class="cat"><span>Trade</span><span class="n">${d.trade_count||0}</span></div>
+<div class="cat"><span>Skill</span><span class="n">${d.skill_count||0}</span></div>
+<div class="cat"><span>Content</span><span class="n">${d.content_count||0}</span></div>
+<div class="cat"><span>Technical</span><span class="n">${d.technical_count||0}</span></div>
+<div class="cat"><span>Market</span><span class="n">${d.market_count||0}</span></div>
+<div class="cat"><span>Ideas</span><span class="n">${d.idea_count||0}</span></div>
+</div>
+<div style="margin-top:16px;font-size:12px;color:#555">
+Deployed: ${(d.deployed_at||'').slice(0,10)} | Last active: ${(d.last_active||'').slice(0,10)}
+</div>
+</div>`;
+}).catch(()=>{document.getElementById('loading').style.display='none';document.getElementById('error').style.display='block';document.getElementById('error').innerHTML='<h2>Error loading warrior</h2>';});
+fetch('/ep/army').then(r=>r.json()).then(d=>{
+document.getElementById('army').innerHTML=`<span>${d.total_warriors||0}</span> warriors deployed | <span>${d.total_contributions||0}</span> total contributions`;
+}).catch(()=>{});
+}
+</script>
+<!-- Ancient Greek Temple Atmosphere -->
+<img class="god-statue left" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Corinthian_helmet_Denda_Staatliche_Antikensammlungen_4330.svg/200px-Corinthian_helmet_Denda_Staatliche_Antikensammlungen_4330.svg.png" alt="">
+<img class="god-statue right" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Corinthian_helmet_Denda_Staatliche_Antikensammlungen_4330.svg/200px-Corinthian_helmet_Denda_Staatliche_Antikensammlungen_4330.svg.png" alt="">
+<div id="tsparticles" style="position:fixed;inset:0;pointer-events:none;z-index:-1;"></div>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles-engine@2/tsparticles.engine.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2/tsparticles.slim.min.js"></script>
+<script>
+if (window.innerWidth > 768) {
+  window.addEventListener('load', function() {
+    if (typeof tsParticles !== 'undefined') {
+      tsParticles.load("tsparticles", {
+        particles: {
+          number: { value: 25 },
+          color: { value: ["#ffaa00","#ffd700","#ff8800"] },
+          shape: { type: "circle" },
+          opacity: { value: { min: 0.1, max: 0.35 }, animation: { enable: true, speed: 0.5, minimumValue: 0.1 } },
+          size: { value: { min: 1, max: 3 } },
+          move: { enable: true, speed: 0.5, direction: "top", outModes: "out" }
+        },
+        interactivity: { events: {} }
+      });
+    }
+  });
+}
+</script>
+<script>
+document.addEventListener('mousemove', function(e) {
+  var x = (window.innerWidth/2 - e.clientX) / 50;
+  var y = (window.innerHeight/2 - e.clientY) / 70;
+  var els = document.querySelectorAll('.parallax');
+  for (var i = 0; i < els.length; i++) {
+    var speed = parseFloat(els[i].dataset.speed) || 1;
+    els[i].style.transform = 'translate(' + (x*speed) + 'px, ' + (y*speed) + 'px)';
+  }
+});
+</script>
+<script>
+var revealObserver = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.weapon-card, .stat-item, .path-step, .product-card, .feature-card, .step-card, .stat-card')
+  .forEach(function(el) {
+    el.classList.add('reveal');
+    revealObserver.observe(el);
+  });
+</script>
+
+<script>
+(function(){
+  var nav=document.querySelector('.nav-links');
+  var tog=document.querySelector('.nav-toggle');
+  if(tog&&nav){
+    tog.addEventListener('click',function(){
+      nav.classList.toggle('open');
+      tog.textContent=nav.classList.contains('open')?'\u2715':'\u2630';
+    });
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){nav.classList.remove('open');tog.textContent='\u2630';});
+    });
+  }
+})();
+</script>
+</body>
+</html>

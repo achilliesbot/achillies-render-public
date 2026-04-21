@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: achillesalpha
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8080"
+    healthCheckPath: /api/status
+    autoDeploy: true

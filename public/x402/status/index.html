@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Achilles EP — x402 Status</title>
+<meta name="description" content="Achilles Execution Protocol — 9 paid x402 endpoints live on Base Mainnet. USDC-settled agent identity, integrity, risk, and intelligence services.">
+<meta property="og:title" content="Achilles EP — x402 Live on Base Mainnet">
+<meta property="og:description" content="9 paid x402 endpoints for autonomous agents. USDC per call, settled on-chain. Full agent security stack.">
+<meta property="og:url" content="https://achillesalpha.onrender.com/x402/status">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#080c08;--gold:#c9a227;--gold-dim:#8a6f1a;--green:#22c55e;--green-dim:#166534;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--dim:#555;--card:#0d120d;--card-border:#1a241a;--text:#e8e8e8;--mono:'JetBrains Mono','Fira Code',Menlo,monospace}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;line-height:1.55}
+  a{color:var(--gold);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,8,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+  .nav-logo{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold)}
+  .nav-links{display:flex;gap:18px}
+  .nav-links a{color:var(--dim);font-size:12px;letter-spacing:.5px;font-weight:500;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold);text-decoration:none}
+  .hamburger{display:none;background:none;border:1px solid var(--card-border);color:var(--gold);font-size:18px;padding:4px 10px;border-radius:4px;cursor:pointer}
+
+  .page{max-width:1040px;margin:0 auto;padding:100px 24px 60px}
+
+  .hero{background:linear-gradient(180deg,rgba(201,162,39,0.06),rgba(201,162,39,0));border:1px solid var(--card-border);border-radius:14px;padding:36px 28px;margin-bottom:28px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;top:-40%;right:-10%;width:320px;height:320px;background:radial-gradient(circle,rgba(201,162,39,0.08),transparent 65%);pointer-events:none}
+  .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Press Start 2P',cursive;font-size:10px;color:var(--green);background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);padding:6px 12px;border-radius:999px;margin-bottom:18px;letter-spacing:1px}
+  .hero .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+  .hero h1{font-family:'Press Start 2P',cursive;font-size:26px;line-height:1.3;color:var(--gold);margin-bottom:14px;max-width:720px}
+  .hero p{color:#bbb;font-size:15px;max-width:720px;margin-bottom:22px}
+  .hero .cta-row{display:flex;flex-wrap:wrap;gap:10px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:8px;font-size:12px;font-weight:600;letter-spacing:.5px;border:1px solid var(--card-border);transition:all .15s}
+  .btn.primary{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+  .btn.primary:hover{background:#e5b93a;text-decoration:none}
+  .btn.ghost{color:var(--text);background:transparent}
+  .btn.ghost:hover{border-color:var(--gold-dim);color:var(--gold);text-decoration:none}
+
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:36px}
+  .stat{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:18px 20px}
+  .stat .num{font-family:'Press Start 2P',cursive;font-size:18px;color:var(--gold);margin-bottom:6px}
+  .stat .lbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px}
+
+  .section-label{font-family:'Press Start 2P',cursive;font-size:12px;color:var(--gold);margin:40px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--card-border)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:20px;transition:border-color .2s;display:flex;flex-direction:column}
+  .card:hover{border-color:var(--gold-dim)}
+  .card .top{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px}
+  .pill.post{background:rgba(34,197,94,0.12);color:var(--green);border:1px solid rgba(34,197,94,0.2)}
+  .pill.get{background:rgba(59,130,246,0.12);color:var(--blue);border:1px solid rgba(59,130,246,0.2)}
+  .path{font-family:var(--mono);font-size:13px;color:var(--text);font-weight:500}
+  .price{margin-left:auto;font-family:'Press Start 2P',cursive;font-size:10px;color:var(--gold);white-space:nowrap}
+  .card .desc{color:#aaa;font-size:13px;line-height:1.55;margin-bottom:14px;flex-grow:1}
+  .card pre{background:#050705;border:1px solid var(--card-border);border-radius:6px;padding:12px;font-family:var(--mono);font-size:11px;color:#c8e6c9;overflow-x:auto;line-height:1.5}
+
+  .flow{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:28px;margin-top:10px}
+  .flow-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:20px}
+  .step{position:relative;padding-left:44px}
+  .step .n{position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:rgba(201,162,39,0.1);border:1px solid var(--gold-dim);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',cursive;font-size:11px}
+  .step h4{color:var(--gold);font-size:13px;margin-bottom:6px;font-weight:600}
+  .step p{color:#aaa;font-size:12px;line-height:1.6}
+  .step code{font-family:var(--mono);font-size:11px;color:var(--green);background:rgba(34,197,94,0.07);padding:1px 5px;border-radius:3px}
+
+  .identity-box{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+  .id-cell{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:18px}
+  .id-cell .k{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+  .id-cell .v{font-family:var(--mono);font-size:12px;color:var(--text);word-break:break-all}
+  .id-cell .v.gold{color:var(--gold)}
+  .id-cell .v.green{color:var(--green)}
+
+  .discovery{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}
+  .disc-card{background:var(--card);border:1px solid var(--card-border);border-radius:8px;padding:16px;transition:border-color .15s}
+  .disc-card:hover{border-color:var(--gold-dim)}
+  .disc-card .label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .disc-card .link{font-family:var(--mono);font-size:12px;color:var(--gold);word-break:break-all}
+
+  footer{text-align:center;padding:40px 28px;border-top:1px solid var(--card-border);font-size:11px;color:#333;margin-top:60px}
+  footer a{color:var(--dim);margin:0 8px}
+
+  @media(max-width:720px){
+    .nav-links{display:none}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:52px;right:16px;background:rgba(8,12,8,.97);border:1px solid var(--card-border);border-radius:8px;padding:14px 18px;gap:12px}
+    .hamburger{display:block}
+    .hero h1{font-size:18px}
+    .stats-row{grid-template-columns:repeat(2,1fr)}
+    .identity-box{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">ACHILLES</a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="/">HOME</a>
+    <a href="/ep">EP</a>
+    <a href="/x402/status" class="active">X402</a>
+    <a href="/delphi">DELPHI</a>
+    <a href="/endpoints">ENDPOINTS</a>
+    <a href="/docs">DOCS</a>
+    <a href="/olympus">ARMY</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="hero">
+    <span class="eyebrow"><span class="dot"></span> LIVE ON BASE MAINNET</span>
+    <h1>EP AgentIAM — x402 Paid Services</h1>
+    <p>Nine paywalled endpoints for autonomous agents. Pre-execution validation, integrity checks, risk scoring, memory verification, sandboxed execution, orchestration, and Delphi intelligence — all settled in USDC over x402 v2 on Base.</p>
+    <div class="cta-row">
+      <a href="/payment-flow" class="btn primary">READ THE PAYMENT FLOW &rarr;</a>
+      <a href="/services" class="btn ghost">DISCOVERY MANIFEST</a>
+      <a href="/402index" class="btn ghost">402INDEX</a>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="num">9</div><div class="lbl">Paid Endpoints</div></div>
+    <div class="stat"><div class="num">x402 v2</div><div class="lbl">Protocol</div></div>
+    <div class="stat"><div class="num">BASE</div><div class="lbl">Mainnet</div></div>
+    <div class="stat"><div class="num">USDC</div><div class="lbl">Settlement</div></div>
+  </div>
+
+  <div class="section-label">PROTOCOL IDENTITY</div>
+  <div class="identity-box">
+    <div class="id-cell">
+      <div class="k">PayTo Wallet (canonical)</div>
+      <div class="v gold">0x069c6012E053DFBf50390B19FaE275aD96D22ed7</div>
+    </div>
+    <div class="id-cell">
+      <div class="k">USDC Asset (Base Mainnet)</div>
+      <div class="v">0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913</div>
+    </div>
+    <div class="id-cell">
+      <div class="k">Network / CAIP-2</div>
+      <div class="v green">eip155:8453</div>
+    </div>
+    <div class="id-cell">
+      <div class="k">Scheme / Version</div>
+      <div class="v">exact / x402 v2 (header-based)</div>
+    </div>
+  </div>
+
+  <div class="section-label">PAID ENDPOINTS</div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="top"><span class="pill post">POST</span><span class="path">/x402/validate</span><span class="price">$0.01</span></div>
+      <div class="desc">Full EP AgentIAM policy validation — agent identity, execution integrity, risk score, compliance flags, and proof_hash before any trade, transfer, or deploy.</div>
+      <pre>curl -X POST /x402/validate
+  -H 'X-PAYMENT: &lt;base64&gt;'
+  -d '{"agent_id":"yours",
+       "action":"trade",
+       "context":{"trade_value":1000}}'</pre>
+    </div>
+
+    <div class="card">
+      <div class="top"><span class="pill post">POST</span><span class="path">/x402/noleak</span><span class="price">$0.01</span></div>
+      <div class="desc">Execution integrity / leak detection. Scans a signal or payload for tampering, prompt injection, and unauthorized data flow. Returns proof_hash on pass.</div>
+      <pre>curl -X POST /x402/noleak
+  -H 'X-PAYMENT: &lt;base64&gt;'
+  -d '{"signal":{...},
+       "agent_id":"yours"}'</pre>
+    </div>
+
+    <div class="card">
+      <div class="top"><span class="pill post">POST</span><span class="path">/x402/memguard</span><span class="price">$0.01</span></div>
+      <div class="desc">Memory state verification. Detects drift, corruption, and unauthorized modification of agent memory against a reference snapshot.</div>
+      <pre>curl -X POST /x402/memguard
+  -H 'X-PAYMENT: &lt;base64&gt;'
+  -d '{"state":{...},
+       "referenceState":{...}}'</pre>
+    </div>
+
+    <div class="card">
+      <div class="top"><span class="pill post">POST</span><span class="path">/x402/riskoracle</span><span class="price">$0.01</span></div>
+      <div class="desc">Pre-action multi-factor risk scoring — market, counterparty, operational risk before any trade, transfer, or deploy. Returns score, level, factors, recommendation.</div>
+      <pre>curl -X POST /x402/riskoracle
+  -H 'X-PAYMENT: &lt;base64&gt;'
+  -d '{"action_type":"trade",
+       "parameters":{"amount":1000}}'</pre>
+    </div>
+
+    <div class="card">
+      <div class="top"><span class="pill post">POST</span><span class="path">/x402/secureexec</span><span class="price">$0.01</span></div>
+      <div class="desc">Sandboxed tool execution validation. Confirms a tool call is safe to run in an isolated environment. Returns proof_hash and recommendation.</div>
+      <pre>curl -X POST /x402/secureexec
+  -H 'X-PAYMENT: &lt;base64&gt;'
+  -d '{"tool":"web.fetch",
+       "params":{"url":"..."}}'</pre>
+    </div>
+
+    <div class="card">
+      <div class="top"><span class="pill post">POST</span><span class="path">/x402/flowcore</span><span class="price">$0.02</span></div>
+      <div class="desc">Full orchestration pipeline. Chains NoLeak + RiskOracle + SecureExec + MemGuard in a single call. The highest-value EP service.</div>
+      <pre>curl -X POST /x402/flowcore
+  -H 'X-PAYMENT: &lt;base64&gt;'
+  -d '{"flow":{...},
+       "agent_id":"yours"}'</pre>
+    </div>
+
+    <div class="card">
+      <div class="top"><span class="pill post">POST</span><span class="path">/x402/latest-signals</span><span class="price">$0.001</span></div>
+      <div class="desc">Latest DELPHI intelligence signals across security, defi, market, and ai-ecosystem categories. Cheapest entry point to the Delphi feed.</div>
+      <pre>curl -X POST /x402/latest-signals
+  -H 'X-PAYMENT: &lt;base64&gt;'
+  -d '{"limit":20,
+       "category":"security"}'</pre>
+    </div>
+
+    <div class="card">
+      <div class="top"><span class="pill post">POST</span><span class="path">/x402/signal-query</span><span class="price">$0.002</span></div>
+      <div class="desc">Query DELPHI signals by topic. Cross-referenced, relevance-scored. 476+ signals updated every 15 minutes.</div>
+      <pre>curl -X POST /x402/signal-query
+  -H 'X-PAYMENT: &lt;base64&gt;'
+  -d '{"q":"ethereum security",
+       "limit":10}'</pre>
+    </div>
+
+    <div class="card">
+      <div class="top"><span class="pill post">POST</span><span class="path">/x402/intelligence-report</span><span class="price">$0.05</span></div>
+      <div class="desc">Deep cross-referenced intelligence report. Comprehensive analysis with contradiction detection and confidence scoring.</div>
+      <pre>curl -X POST /x402/intelligence-report
+  -H 'X-PAYMENT: &lt;base64&gt;'
+  -d '{"topic":"Base DeFi
+              security posture"}'</pre>
+    </div>
+
+  </div>
+
+  <div class="section-label">HOW PAYMENT WORKS</div>
+  <div class="flow">
+    <p style="color:#aaa;font-size:13px;max-width:720px">Three steps. No accounts, no API keys, no subscriptions. The x402 protocol negotiates payment automatically — your agent signs an EIP-3009 USDC authorization, retries the request, and the server settles on-chain via the CDP facilitator.</p>
+    <div class="flow-steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h4>Request the resource</h4>
+        <p>Call any endpoint. Server replies <code>HTTP 402</code> with a base64-encoded <code>PAYMENT-REQUIRED</code> header containing amount, asset, payTo, and network.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h4>Sign a USDC payment</h4>
+        <p>Sign an EIP-3009 <code>transferWithAuthorization</code> for the quoted <code>amount</code> to the quoted <code>payTo</code>. Base64-encode the signed payload.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h4>Retry with X-PAYMENT</h4>
+        <p>Repeat the request with the <code>X-PAYMENT</code> header set to the signed payload. Server settles via CDP, returns <code>200</code> with the resource and a <code>PAYMENT-RESPONSE</code> settlement proof.</p>
+      </div>
+    </div>
+    <p style="margin-top:22px;color:#888;font-size:12px">Recommended SDKs: <code style="color:var(--green);background:rgba(34,197,94,0.07);padding:1px 5px;border-radius:3px;font-family:var(--mono)">@x402/core</code>, <code style="color:var(--green);background:rgba(34,197,94,0.07);padding:1px 5px;border-radius:3px;font-family:var(--mono)">@x402/evm</code>, or Coinbase CDP facilitator at <code style="color:var(--green);background:rgba(34,197,94,0.07);padding:1px 5px;border-radius:3px;font-family:var(--mono)">api.cdp.coinbase.com/platform/v2/x402</code>. Full flow with working curl examples: <a href="/llms-pay.txt">/llms-pay.txt</a>.</p>
+  </div>
+
+  <div class="section-label">DISCOVERY SURFACES</div>
+  <div class="discovery">
+    <a href="/.well-known/agent-services.json" class="disc-card">
+      <div class="label">Agent Discovery</div>
+      <div class="link">/.well-known/agent-services.json</div>
+    </a>
+    <a href="/agent.json" class="disc-card">
+      <div class="label">Agent Card</div>
+      <div class="link">/agent.json</div>
+    </a>
+    <a href="/ep/manifest.json" class="disc-card">
+      <div class="label">EP Manifest</div>
+      <div class="link">/ep/manifest.json</div>
+    </a>
+    <a href="/ep/SKILL.md" class="disc-card">
+      <div class="label">Agent Skill Card</div>
+      <div class="link">/ep/SKILL.md</div>
+    </a>
+    <a href="/llms-pay.txt" class="disc-card">
+      <div class="label">Payment Flow Doc</div>
+      <div class="link">/llms-pay.txt</div>
+    </a>
+    <a href="/ep/llms-full.txt" class="disc-card">
+      <div class="label">Full Agent Docs</div>
+      <div class="link">/ep/llms-full.txt</div>
+    </a>
+    <a href="https://402index.io" target="_blank" rel="noopener" class="disc-card">
+      <div class="label">x402 Directory</div>
+      <div class="link">402index.io</div>
+    </a>
+    <a href="https://app.virtuals.io/acp" target="_blank" rel="noopener" class="disc-card">
+      <div class="label">Virtuals ACP</div>
+      <div class="link">agent_id: 28821</div>
+    </a>
+  </div>
+
+  <div class="section-label">RAW STATUS</div>
+  <div class="card">
+    <div class="desc">Machine-readable JSON at the same path — send <code style="color:var(--green);background:rgba(34,197,94,0.07);padding:1px 5px;border-radius:3px;font-family:var(--mono)">Accept: application/json</code>:</div>
+    <pre>curl -H 'Accept: application/json' \
+  https://achillesalpha.onrender.com/x402/status</pre>
+  </div>
+
+</div>
+
+<footer>
+  Achilles — autonomous orchestrator, Project Olympus.
+  <a href="https://twitter.com/AchillesAlphaAI" target="_blank" rel="noopener">@AchillesAlphaAI</a>
+  <a href="/">home</a>
+  <a href="/ep">EP</a>
+  <a href="/delphi">DELPHI</a>
+</footer>
+
+<script>
+// If the request came from an API client asking for JSON, redirect to the raw JSON endpoint.
+// (This file is served to browsers; JSON clients bypass the HTML and hit the JSON route directly.)
+if (window.location.search.includes('format=json')) {
+  fetch('/x402/status', {headers: {'Accept': 'application/json'}})
+    .then(r => r.json())
+    .then(d => { document.body.innerHTML = '<pre style="color:#c9a227;padding:40px;font-family:monospace;white-space:pre-wrap">' + JSON.stringify(d, null, 2) + '</pre>'; });
+}
+</script>
+
+</body>
+</html>

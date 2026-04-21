@@ -1,0 +1,67 @@
+# EP AgentIAM Pre-Execution Guard
+# Version: 2026.3.20
+# Live: https://achillesalpha.onrender.com/ep
+# ACP: https://app.virtuals.io/acp — ep_guard offering, $0.01/call
+
+## What EP Does
+EP is the pre-execution trust layer for autonomous agents.
+Before any action executes, EP validates it against a defined policy set
+and returns a cryptographic proof_hash anchored on Base.
+Boolean pass/fail in milliseconds. Framework agnostic. Asset agnostic.
+
+## Five Pillars (ALL LIVE)
+1. Identity — ERC-8004 on-chain agent registration on Base
+2. Access — Policy sets enforced via POST /ep/validate
+3. Management — Cryptographic proof_hash per action on Base
+4. Reputation — Talent Protocol operator verification
+5. Payments — MPP + x402 agnostic adapter
+
+## KEY MOAT
+EP proof_hash embedded INSIDE MPP receipt.
+One receipt = payment verified (Stripe/MPP) + authorization verified (EP).
+No other agent infrastructure layer has dual verification in a single receipt.
+
+## Endpoints
+POST /ep/validate          — Policy validation + proof_hash
+POST /ep/swarm/validate    — Multi-agent swarm coordination
+GET  /ep/status            — Live system stats (real Postgres data)
+GET  /ep/army              — Active warrior count
+GET  /ep/manifest.json     — Agent capability manifest
+GET  /ep/SKILL.md          — OpenClaw skill file
+GET  /agent.json           — DevSpot agent manifest
+GET  /agent_log.json       — Execution proof log
+
+## Pricing
+basic-guard:    $0.01/call — Fast yes/no + proof_hash
+standard-guard: $0.05/call — Policy + ERC-8004 identity
+full-iam:       $0.10/call — All 5 pillars, full receipt
+batch-10:       $0.50      — 10 validations bundled
+risk-scan:      $2.00      — Deep DeFi/contract risk
+daily-sub:      $5.00/day  — Unlimited checks
+
+## ACP Marketplace
+Agent: achilles (ID: 28821)
+Offering: ep_guard — $0.01/call, 5 min SLA
+Wallet: 0x876a8cfA804762CEC9ae214FCEad039761a0898d
+Payment: x402 on Base, USDC
+
+## Example Request
+POST https://achillesalpha.onrender.com/ep/validate
+{
+  "agent_id": "your_agent",
+  "action": "trade",
+  "policy_set_id": "default-v1"
+}
+
+## Example Response
+{
+  "valid": true,
+  "proof_hash": "0x6094ef849e463c6d0c8fdefdbb6c94a...",
+  "policy_set_id": "default-v1",
+  "timestamp": "2026-03-20T00:00:00.000Z"
+}
+
+## Tech Stack
+Node.js, Express, Ethers.js, Solidity, Base Mainnet
+ERC-8004, ERC-7710, Talent Protocol, MPP, x402
+Postgres, Pinecone, OpenClaw, Render

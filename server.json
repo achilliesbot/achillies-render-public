@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.achilliesbot/ep-agentiam",
+  "title": "EP AgentIAM",
+  "description": "AI agent execution safety via x402 micropayments: risk scoring, integrity, memory checks",
+  "repository": {
+    "url": "https://github.com/achilliesbot/achillies-render",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://achillesalpha.onrender.com/mcp"
+    }
+  ]
+}

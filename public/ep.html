@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EP AgentIAM — Identity. Access. Trust.</title>
+<meta name="description" content="Execution Protocol AgentIAM: policy validation, risk scoring, and proof generation for autonomous AI agents.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8XZ094X6YT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-8XZ094X6YT');</script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080C08;--card:#0e130e;--card-border:#1a241a;
+    --gold:#F59E0B;--gold-dim:rgba(245,158,11,0.25);--gold-glow:0 0 24px rgba(245,158,11,0.25);
+    --green:#22C55E;--green-dim:rgba(34,197,94,0.25);
+    --text:#E5E7EB;--dim:#6B7280;--flame:#ff6600;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+  h1,h2,h3{font-family:'Press Start 2P',cursive}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,8,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+  .nav-logo{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);text-decoration:none}
+  .nav-links{display:flex;gap:18px}
+  .nav-links a{color:var(--dim);text-decoration:none;font-size:12px;letter-spacing:.5px;font-weight:500;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .hamburger{display:none;cursor:pointer;color:var(--gold);font-size:22px;background:none;border:none}
+
+  .hero{position:relative;padding:130px 28px 70px;text-align:center;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(245,158,11,0.06) 0%,transparent 65%);pointer-events:none}
+
+  .shield-wrap{position:relative;width:120px;height:140px;margin:0 auto 24px}
+  .shield-body{width:120px;height:140px;border:2px solid var(--gold);border-radius:10px 10px 60px 60px;display:flex;align-items:center;justify-content:center;position:relative}
+  .shield-body::after{content:'EP';font-family:'Press Start 2P',cursive;font-size:20px;color:var(--gold)}
+  .shield-pulse-ring{position:absolute;inset:-8px;border:1px solid var(--gold-dim);border-radius:14px 14px 64px 64px;animation:sp 2s ease-in-out infinite}
+  .shield-pulse-ring:nth-child(2){animation-delay:.7s;inset:-16px;border-radius:18px 18px 68px 68px}
+  @keyframes sp{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:0;transform:scale(1.08)}}
+
+  .hero h1{font-size:24px;color:var(--gold);letter-spacing:4px;margin-bottom:14px;text-shadow:0 0 30px rgba(245,158,11,0.3)}
+  .hero .sub{font-size:15px;color:var(--dim);max-width:500px;margin:0 auto;line-height:1.7}
+
+  .stats-bar{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:22px 28px;border-top:1px solid var(--card-border);border-bottom:1px solid var(--card-border);background:rgba(14,19,14,0.5)}
+  .stat-item{text-align:center}
+  .stat-num{font-family:'Press Start 2P',cursive;font-size:18px;color:var(--gold)}
+  .stat-lbl{font-size:10px;color:var(--dim);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+
+  .container{max-width:1060px;margin:0 auto;padding:0 28px}
+  section{padding:60px 0}
+  .section-title{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:12px;text-align:center}
+  .section-sub{text-align:center;color:var(--dim);font-size:14px;margin-bottom:36px;line-height:1.6}
+
+  .pillars{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .pillar{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:22px 14px;text-align:center;transition:border-color .3s,box-shadow .3s}
+  .pillar:hover{border-color:var(--gold-dim);box-shadow:var(--gold-glow)}
+  .pillar-icon{font-size:28px;margin-bottom:10px;animation:float 3s ease-in-out infinite}
+  .pillar h3{font-size:8px;color:var(--gold);margin-bottom:8px;letter-spacing:1px}
+  .pillar p{font-size:12px;color:#9CA3AF;line-height:1.5}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  .endpoint-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .ep-card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:22px;transition:border-color .3s}
+  .ep-card:hover{border-color:var(--gold-dim)}
+  .ep-card h3{font-size:10px;color:var(--gold);margin-bottom:8px}
+  .ep-card .price{font-size:22px;font-weight:700;color:#fff;margin:8px 0}
+  .ep-card .price span{font-size:12px;color:var(--dim)}
+  .ep-card p{font-size:13px;color:#9CA3AF;line-height:1.5}
+
+  .code-block{background:#050805;border:1px solid var(--card-border);border-radius:8px;padding:18px;font-family:'Courier New',monospace;font-size:12px;line-height:1.7;overflow-x:auto;color:#aaa;margin-top:16px}
+  .code-block .kw{color:var(--gold)} .code-block .str{color:var(--green)} .code-block .cmt{color:#444}
+
+  .cta-section{text-align:center;padding:48px 0}
+  .cta-btn{display:inline-block;padding:14px 28px;font-family:'Press Start 2P',cursive;font-size:10px;border-radius:8px;text-decoration:none;transition:transform .2s,box-shadow .2s}
+  .cta-btn:hover{transform:translateY(-2px)}
+  .cta-btn.primary{background:var(--gold);color:#000;box-shadow:var(--gold-glow)}
+  .cta-btn.secondary{background:transparent;color:var(--gold);border:1px solid var(--gold-dim);margin-left:12px}
+
+  footer{text-align:center;padding:32px 28px;border-top:1px solid var(--card-border);font-size:11px;color:#333}
+  footer a{color:var(--flame);text-decoration:none}
+
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  @media(max-width:768px){
+    .hero h1{font-size:16px} .pillars{grid-template-columns:repeat(2,1fr)}
+    .endpoint-cards{grid-template-columns:1fr} .stats-bar{gap:20px} .stat-num{font-size:14px}
+    .nav-links{display:none}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:52px;right:16px;background:rgba(8,12,8,.97);border:1px solid var(--card-border);border-radius:8px;padding:14px 18px;gap:12px}
+    .hamburger{display:block}
+  }
+  @media(max-width:480px){.pillars{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">ACHILLES</a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="/">HOME</a><a href="/ep" class="active">EP</a><a href="/delphi">DELPHI</a><a href="/docs">DOCS</a><a href="/noleak">NOLEAK</a><a href="/flowcore">FLOWCORE</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="shield-wrap">
+    <div class="shield-pulse-ring"></div>
+    <div class="shield-pulse-ring"></div>
+    <div class="shield-body"></div>
+  </div>
+  <h1>EP AGENTIAM</h1>
+  <p class="sub">Identity. Access. Trust.<br>The policy enforcement layer for autonomous agents. Every action validated. Every decision scored. Every proof on-chain.</p>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num" id="sValidations">--</div><div class="stat-lbl">Validations</div></div>
+  <div class="stat-item"><div class="stat-num" id="sExecutions">--</div><div class="stat-lbl">Executions</div></div>
+  <div class="stat-item"><div class="stat-num" id="sProofs">--</div><div class="stat-lbl">Proofs</div></div>
+  <div class="stat-item"><div class="stat-num" id="sWinRate">--</div><div class="stat-lbl">Win Rate</div></div>
+</div>
+
+<div class="container">
+
+  <section>
+    <div class="section-title">THE 5 PILLARS</div>
+    <div class="section-sub">Every agent action passes through EP before execution.</div>
+    <div class="pillars">
+      <div class="pillar"><div class="pillar-icon">&#x1F4CB;</div><h3>IDENTITY</h3><p>Agent registration and credential verification. Know who is acting.</p></div>
+      <div class="pillar"><div class="pillar-icon">&#x1F512;</div><h3>ACCESS</h3><p>Permission enforcement and scope control. Limit what agents can do.</p></div>
+      <div class="pillar"><div class="pillar-icon">&#x2696;</div><h3>POLICY</h3><p>Rule-based validation engine. Configurable policy sets per agent.</p></div>
+      <div class="pillar"><div class="pillar-icon">&#x26A0;</div><h3>RISK</h3><p>Multi-factor risk scoring. Leverage, exposure, market conditions.</p></div>
+      <div class="pillar"><div class="pillar-icon">&#x1F4DC;</div><h3>PROOF</h3><p>Cryptographic proof hashes. Every validation produces verifiable evidence.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">ENDPOINTS</div>
+    <div class="endpoint-cards">
+      <div class="ep-card"><h3>VALIDATE</h3><div class="price">$0.01<span>/call</span></div><p>Full policy validation for agent proposals. Returns approval status, risk score, violation list, and proof hash.</p></div>
+      <div class="ep-card"><h3>RISK-CHECK</h3><div class="price">$0.005<span>/call</span></div><p>Quick pre-action risk assessment. Scores by action type, trade value, leverage. Returns risk level and recommendation.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">INTEGRATE</div>
+    <div class="code-block">
+<span class="cmt">// Validate an agent proposal via EP</span>
+<span class="kw">const</span> response = <span class="kw">await</span> fetch(<span class="str">'https://achillesalpha.onrender.com/x402/validate'</span>, {
+  method: <span class="str">'POST'</span>,
+  headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+  body: JSON.stringify({
+    agent_id: <span class="str">'my-trading-agent'</span>,
+    asset: <span class="str">'ETH'</span>,
+    direction: <span class="str">'long'</span>,
+    amount_usd: <span class="str">500</span>,
+    leverage: <span class="str">2</span>
+  })
+});
+
+<span class="cmt">// Returns 402 → pay USDC on Base → get validation result:</span>
+<span class="cmt">// { approved: true, risk_score: 3.2, proof_hash: "0x...", flags: [] }</span>
+    </div>
+  </section>
+
+  <div class="cta-section">
+    <a href="/x402/status" class="cta-btn primary">START VALIDATING</a>
+    <a href="/" class="cta-btn secondary">ALL SERVICES</a>
+  </div>
+</div>
+
+<footer>
+  <a href="/">ACHILLES</a> &middot; <a href="/ep">EP</a> &middot; <a href="/delphi">DELPHI</a> &middot; <a href="/docs">DOCS</a> &middot; <a href="/flowcore">FLOWCORE</a> &middot; <a href="/pnl">INTEL</a> &middot; <a href="/olympus">ARMY</a> &middot; <a href="https://x.com/achillesalphaai" target="_blank">@AchillesAlphaAI</a>
+  <div style="margin-top:8px;color:#1a1a1a">Achilles EP AgentIAM &middot; Base Mainnet</div>
+</footer>
+
+<script>
+async function loadStats(){try{const r=await fetch('/ep/status');const d=await r.json();const s=d.stats||{};animateNum('sValidations',s.totalValidations||0);animateNum('sExecutions',s.totalExecutions||0);animateNum('sProofs',s.totalProofs||0);document.getElementById('sWinRate').textContent=s.winRate||'0%'}catch(e){}}
+function animateNum(id,target){const el=document.getElementById(id);const start=parseInt(el.textContent)||0;if(start===target){el.textContent=target;return}const steps=30,inc=(target-start)/steps;let current=start,step=0;const t=setInterval(()=>{step++;current+=inc;el.textContent=Math.round(current);if(step>=steps){el.textContent=target;clearInterval(t)}},25)}
+loadStats();setInterval(loadStats,60000);
+</script>
+</body>
+</html>

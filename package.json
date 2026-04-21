@@ -1,0 +1,32 @@
+{
+  "name": "achillies-render",
+  "version": "1.0.0",
+  "description": "Achilles AI Agent Dashboard - Render Deployment",
+  "main": "server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "autonomous",
+    "crypto",
+    "trading"
+  ],
+  "author": "Achilles AI",
+  "license": "MIT",
+  "dependencies": {
+    "@x402/core": "^2.9.0",
+    "@x402/evm": "^2.9.0",
+    "@x402/express": "^2.9.0",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^4.18.2",
+    "stripe": "^20.4.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MemGuard — Memory State Verification</title>
+<meta name="description" content="MemGuard: memory state verification for autonomous AI agents. Detects drift, corruption, and unauthorized modifications.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8XZ094X6YT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-8XZ094X6YT');</script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080C08;--card:#0e130e;--card-border:#1a241a;
+    --gold:#F59E0B;--gold-dim:rgba(245,158,11,0.25);--gold-glow:0 0 24px rgba(245,158,11,0.25);
+    --green:#22C55E;--green-dim:rgba(34,197,94,0.25);
+    --red:#EF4444;
+    --text:#E5E7EB;--dim:#6B7280;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+  h1,h2,h3{font-family:'Press Start 2P',cursive}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,8,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+  .nav-logo{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);text-decoration:none}
+  .nav-links{display:flex;gap:18px}
+  .nav-links a{color:var(--dim);text-decoration:none;font-size:12px;letter-spacing:.5px;font-weight:500;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .hamburger{display:none;cursor:pointer;color:var(--gold);font-size:22px;background:none;border:none}
+
+  /* HERO */
+  .hero{position:relative;padding:130px 28px 70px;text-align:center;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(245,158,11,0.06) 0%,transparent 65%);pointer-events:none}
+  .hero h1{font-size:22px;color:var(--gold);letter-spacing:3px;margin-bottom:14px;text-shadow:0 0 30px rgba(245,158,11,0.3)}
+  .hero .sub{font-size:15px;color:var(--dim);max-width:560px;margin:0 auto;line-height:1.7}
+
+  /* MEMORY GRID ANIMATION */
+  .mem-grid{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;display:grid;grid-template-columns:repeat(16,1fr);grid-template-rows:repeat(8,1fr);gap:3px;padding:20px;opacity:0.25}
+  .mem-block{border-radius:3px;background:var(--card-border);animation:memflash var(--dur) ease-in-out infinite;animation-delay:var(--del)}
+  @keyframes memflash{
+    0%,80%,100%{background:var(--card-border);box-shadow:none}
+    40%{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,0.5)}
+  }
+  @keyframes memcorrupt{
+    0%,80%,100%{background:var(--card-border);box-shadow:none}
+    40%{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,0.5)}
+  }
+  .mem-block.corrupt{animation-name:memcorrupt}
+
+  /* CONTAINER */
+  .container{max-width:1060px;margin:0 auto;padding:0 28px}
+  section{padding:60px 0}
+  .section-title{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:12px;text-align:center}
+  .section-sub{text-align:center;color:var(--dim);font-size:14px;margin-bottom:36px;line-height:1.6}
+
+  /* CARDS */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:28px 20px;text-align:center;transition:border-color .3s,box-shadow .3s}
+  .card:hover{border-color:var(--gold-dim);box-shadow:var(--gold-glow)}
+  .card-icon{font-size:36px;margin-bottom:14px;display:block;animation:float 3s ease-in-out infinite}
+  .card h3{font-size:9px;color:var(--gold);margin-bottom:10px;letter-spacing:1px}
+  .card p{font-size:13px;color:#9CA3AF;line-height:1.6}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  /* PRICING */
+  .pricing-box{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:32px;text-align:center;max-width:480px;margin:0 auto}
+  .pricing-box .price{font-family:'Press Start 2P',cursive;font-size:28px;color:#fff;margin:12px 0}
+  .pricing-box .price span{font-size:12px;color:var(--dim)}
+  .pricing-box .method{font-size:13px;color:var(--green);margin-top:8px}
+
+  /* CODE BLOCK */
+  .code-block{background:#050805;border:1px solid var(--card-border);border-radius:8px;padding:20px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;overflow-x:auto;color:#aaa;max-width:700px;margin:0 auto}
+  .code-block .kw{color:var(--gold)}
+  .code-block .str{color:var(--green)}
+  .code-block .cmt{color:#444}
+
+  /* CTA */
+  .cta-section{text-align:center;padding:48px 0}
+  .cta-btn{display:inline-block;padding:14px 28px;font-family:'Press Start 2P',cursive;font-size:10px;border-radius:8px;text-decoration:none;transition:transform .2s,box-shadow .2s;cursor:pointer;border:none}
+  .cta-btn:hover{transform:translateY(-2px)}
+  .cta-btn.primary{background:var(--gold);color:#000;box-shadow:var(--gold-glow)}
+
+  /* STATUS BADGE */
+  .status-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green);margin-bottom:20px}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* FOOTER */
+  footer{text-align:center;padding:32px 28px;border-top:1px solid var(--card-border);font-size:11px;color:#333}
+  footer a{color:var(--gold);text-decoration:none;margin:0 8px}
+  footer .footer-links{margin-bottom:12px}
+  footer .footer-links a{color:var(--dim);font-size:11px;transition:color .2s}
+  footer .footer-links a:hover{color:var(--gold)}
+
+  /* RESPONSIVE */
+  @media(max-width:768px){
+    .hero h1{font-size:16px}
+    .cards{grid-template-columns:1fr}
+    .mem-grid{grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(4,1fr)}
+    .nav-links{display:none}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:52px;right:16px;background:rgba(8,12,8,.97);border:1px solid var(--card-border);border-radius:8px;padding:14px 18px;gap:12px}
+    .hamburger{display:block}
+    .code-block{font-size:11px;padding:14px}
+  }
+  @media(max-width:480px){
+    .hero{padding:110px 20px 50px}
+    .hero h1{font-size:13px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">ACHILLES</a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="/">HOME</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/docs">DOCS</a><a href="/noleak">NOLEAK</a><a href="/flowcore">FLOWCORE</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="mem-grid" id="memGrid"></div>
+  <div class="status-badge"><span class="status-dot"></span> LIVE ON BASE MAINNET</div>
+  <h1>MEMGUARD</h1>
+  <p class="sub">Memory State Verification for Autonomous Agents.<br>Every state checked. Every drift detected. Every corruption caught before it spreads.</p>
+</div>
+
+<div class="container">
+
+  <section>
+    <div class="section-title">WHAT IT DOES</div>
+    <p class="section-sub">Three layers of memory integrity verification on every call</p>
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">&#128200;</span>
+        <h3>DRIFT DETECTION</h3>
+        <p>Compares current memory state against baseline snapshots. Flags deviation beyond threshold so your agent never silently drifts off course.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#128165;</span>
+        <h3>CORRUPTION CHECK</h3>
+        <p>Validates memory integrity at the hash level. Detects bit-level corruption, truncation, and silent data rot before it compounds into failures.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#128683;</span>
+        <h3>UNAUTHORIZED MODS</h3>
+        <p>Detects writes from unauthorized processes or agents. Ensures only approved sources can modify your agent's memory state.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">PRICING</div>
+    <p class="section-sub">Simple per-call pricing. No subscriptions. No minimums.</p>
+    <div class="pricing-box">
+      <h3 style="font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:8px">PER CALL</h3>
+      <div class="price">$0.01 <span>/ call</span></div>
+      <div class="method">x402 USDC on Base Mainnet</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">INTEGRATION</div>
+    <p class="section-sub">One POST request. Instant memory verification.</p>
+    <div class="code-block">
+<span class="cmt">// Verify memory state before critical operations</span>
+<span class="kw">POST</span> /x402/memguard
+
+{
+  <span class="str">"agent_id"</span>: <span class="str">"my-agent"</span>,
+  <span class="str">"memory_hash"</span>: <span class="str">"0xabc..."</span>,
+  <span class="str">"expected_state"</span>: <span class="str">"operational"</span>
+}
+
+<span class="cmt">// Response</span>
+{
+  <span class="str">"status"</span>: <span class="str">"verified"</span>,
+  <span class="str">"drift_detected"</span>: <span class="kw">false</span>,
+  <span class="str">"corruption_detected"</span>: <span class="kw">false</span>,
+  <span class="str">"unauthorized_mod"</span>: <span class="kw">false</span>,
+  <span class="str">"integrity_score"</span>: <span class="kw">1.0</span>
+}
+    </div>
+  </section>
+
+  <div class="cta-section">
+    <a href="https://achillesalpha.onrender.com/ep" class="cta-btn primary">Protect Your Memory</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">HOME</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/docs">DOCS</a><a href="/noleak">NOLEAK</a><a href="/flowcore">FLOWCORE</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a>
+  </div>
+  <p>ACHILLES &mdash; Project Olympus &mdash; <a href="https://twitter.com/AchillesAlphaAI" target="_blank">@AchillesAlphaAI</a></p>
+</footer>
+
+<script>
+(function(){
+  var grid=document.getElementById('memGrid');
+  var total=128;
+  var corruptIndices=[17,42,63,89,107];
+  for(var i=0;i<total;i++){
+    var b=document.createElement('div');
+    b.className='mem-block';
+    if(corruptIndices.indexOf(i)!==-1) b.className+=' corrupt';
+    var dur=(2+Math.random()*4).toFixed(1);
+    var del=(Math.random()*5).toFixed(1);
+    b.style.setProperty('--dur',dur+'s');
+    b.style.setProperty('--del',del+'s');
+    grid.appendChild(b);
+  }
+})();
+</script>
+
+</body>
+</html>

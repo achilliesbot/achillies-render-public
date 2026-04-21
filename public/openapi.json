@@ -1,0 +1,318 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Achilles EP AgentIAM",
+    "description": "AI agent execution validation, risk scoring, memory verification, and orchestration. Pay-per-call via x402 USDC micropayments on Base.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Achilles",
+      "url": "https://achillesalpha.onrender.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://achillesalpha.onrender.com",
+      "description": "Production"
+    }
+  ],
+  "paths": {
+    "/x402/noleak": {
+      "post": {
+        "operationId": "noleak",
+        "summary": "Execution integrity verification ($0.01 USDC)",
+        "description": "Detects data leaks, prompt injection, and unauthorized data flow in agent execution payloads.",
+        "x-x402-price": "0.01",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["agent_id"],
+                "properties": {
+                  "agent_id": {"type": "string", "description": "Agent identifier"},
+                  "action": {"type": "string", "description": "Action to verify"},
+                  "context": {"type": "object", "description": "Additional context"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Integrity check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "clean": {"type": "boolean"},
+                    "threats": {"type": "array", "items": {"type": "string"}},
+                    "confidence": {"type": "number"},
+                    "proof_hash": {"type": "string"}
+                  }
+                }
+              }
+            }
+          },
+          "402": {"description": "Payment required — x402 USDC on Base"}
+        }
+      }
+    },
+    "/x402/memguard": {
+      "post": {
+        "operationId": "memguard",
+        "summary": "Memory state verification ($0.01 USDC)",
+        "description": "Detects drift, corruption, and unauthorized modifications in agent memory.",
+        "x-x402-price": "0.01",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["agent_id"],
+                "properties": {
+                  "agent_id": {"type": "string"},
+                  "memory_hash": {"type": "string"},
+                  "expected_state": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Memory verification result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {"type": "string"},
+                    "drift_detected": {"type": "boolean"},
+                    "corruption_detected": {"type": "boolean"},
+                    "integrity_score": {"type": "number"}
+                  }
+                }
+              }
+            }
+          },
+          "402": {"description": "Payment required"}
+        }
+      }
+    },
+    "/x402/riskoracle": {
+      "post": {
+        "operationId": "riskoracle",
+        "summary": "Pre-action risk scoring ($0.01 USDC)",
+        "description": "Evaluates proposed agent actions before execution. Multi-factor risk analysis.",
+        "x-x402-price": "0.01",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["agent_id", "action"],
+                "properties": {
+                  "agent_id": {"type": "string"},
+                  "action": {"type": "string", "description": "Proposed action to evaluate"},
+                  "value": {"type": "number", "description": "Value involved"},
+                  "context": {"type": "object"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Risk assessment result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "risk_score": {"type": "number"},
+                    "recommendation": {"type": "string"},
+                    "factors": {"type": "array", "items": {"type": "string"}}
+                  }
+                }
+              }
+            }
+          },
+          "402": {"description": "Payment required"}
+        }
+      }
+    },
+    "/x402/secureexec": {
+      "post": {
+        "operationId": "secureexec",
+        "summary": "Tool execution security ($0.01 USDC)",
+        "description": "Validates tool calls before execution. Checks for injection and unauthorized access.",
+        "x-x402-price": "0.01",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["agent_id", "tool"],
+                "properties": {
+                  "agent_id": {"type": "string"},
+                  "tool": {"type": "string"},
+                  "args": {"type": "array", "items": {"type": "string"}}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Security check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "safe": {"type": "boolean"},
+                    "threats": {"type": "array", "items": {"type": "string"}},
+                    "execution_allowed": {"type": "boolean"}
+                  }
+                }
+              }
+            }
+          },
+          "402": {"description": "Payment required"}
+        }
+      }
+    },
+    "/x402/flowcore": {
+      "post": {
+        "operationId": "flowcore",
+        "summary": "Full orchestration pipeline ($0.02 USDC)",
+        "description": "Combines NoLeak + RiskOracle + SecureExec + MemGuard in a single call. Most comprehensive verification.",
+        "x-x402-price": "0.02",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["agent_id", "action"],
+                "properties": {
+                  "agent_id": {"type": "string"},
+                  "action": {"type": "string"},
+                  "value": {"type": "number"},
+                  "memory_hash": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pipeline result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "approved": {"type": "boolean"},
+                    "risk_score": {"type": "number"},
+                    "integrity": {"type": "string"},
+                    "pipeline_hash": {"type": "string"}
+                  }
+                }
+              }
+            }
+          },
+          "402": {"description": "Payment required"}
+        }
+      }
+    },
+    "/x402/validate": {
+      "post": {
+        "operationId": "validate",
+        "summary": "Policy validation ($0.01 USDC)",
+        "description": "Full policy validation for agent proposals against configurable rules.",
+        "x-x402-price": "0.01",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["agent_id"],
+                "properties": {
+                  "agent_id": {"type": "string"},
+                  "action": {"type": "string"},
+                  "value": {"type": "number"},
+                  "target": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Validation result"},
+          "402": {"description": "Payment required"}
+        }
+      }
+    },
+    "/x402/risk-check": {
+      "post": {
+        "operationId": "riskCheck",
+        "summary": "Quick risk assessment ($0.005 USDC)",
+        "description": "Fast risk scoring for any agent action.",
+        "x-x402-price": "0.005",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["agent_id", "action"],
+                "properties": {
+                  "agent_id": {"type": "string"},
+                  "action": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Risk assessment"},
+          "402": {"description": "Payment required"}
+        }
+      }
+    },
+    "/x402/delphi": {
+      "post": {
+        "operationId": "delphi",
+        "summary": "DELPHI intelligence signals ($0.01 USDC)",
+        "description": "Real-time AI ecosystem intelligence. Query by signal type for market, agent, and ecosystem intel.",
+        "x-x402-price": "0.01",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {"type": "string", "description": "Signal type filter"},
+                  "severity": {"type": "string"},
+                  "limit": {"type": "number"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Intelligence signals"},
+          "402": {"description": "Payment required"}
+        }
+      }
+    }
+  }
+}

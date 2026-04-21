@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RiskOracle — Pre-Action Risk Scoring for AI Agents</title>
+<meta name="description" content="RiskOracle: real-time risk scoring for autonomous AI agents. Scores leverage, exposure, and market conditions before every action.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8XZ094X6YT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-8XZ094X6YT');</script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080C08;--card:#0e130e;--card-border:#1a241a;
+    --gold:#F59E0B;--gold-dim:rgba(245,158,11,0.25);--gold-glow:0 0 24px rgba(245,158,11,0.25);
+    --green:#22C55E;--green-dim:rgba(34,197,94,0.25);
+    --red:#EF4444;--red-dim:rgba(239,68,68,0.25);
+    --text:#E5E7EB;--dim:#6B7280;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+  h1,h2,h3{font-family:'Press Start 2P',cursive}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,8,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+  .nav-logo{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);text-decoration:none}
+  .nav-links{display:flex;gap:18px}
+  .nav-links a{color:var(--dim);text-decoration:none;font-size:12px;letter-spacing:.5px;font-weight:500;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .hamburger{display:none;cursor:pointer;color:var(--gold);font-size:22px;background:none;border:none}
+
+  .hero{position:relative;padding:130px 28px 70px;text-align:center;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(239,68,68,0.06) 0%,transparent 65%);pointer-events:none}
+  .hero h1{font-size:22px;color:var(--gold);letter-spacing:3px;margin-bottom:14px;text-shadow:0 0 30px rgba(245,158,11,0.3)}
+  .hero .sub{font-size:15px;color:var(--dim);max-width:560px;margin:0 auto;line-height:1.7}
+
+  .gauge-wrap{position:relative;width:140px;height:140px;margin:0 auto 24px}
+  .gauge-ring{width:140px;height:140px;border-radius:50%;border:3px solid var(--card-border);position:relative;display:flex;align-items:center;justify-content:center}
+  .gauge-ring::before{content:'';position:absolute;inset:6px;border-radius:50%;border:2px solid transparent;border-top:2px solid var(--gold);border-right:2px solid var(--gold);animation:gauge-spin 3s linear infinite}
+  .gauge-ring::after{content:'';position:absolute;inset:14px;border-radius:50%;border:1px solid transparent;border-bottom:1px solid var(--red);border-left:1px solid var(--green);animation:gauge-spin 5s linear infinite reverse}
+  .gauge-label{font-family:'Press Start 2P',cursive;font-size:14px;color:var(--gold);z-index:1}
+  @keyframes gauge-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+  .gauge-pulse{position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--gold-dim);animation:gp 2.5s ease-in-out infinite}
+  .gauge-pulse:nth-child(2){inset:-14px;animation-delay:.8s}
+  @keyframes gp{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:0;transform:scale(1.06)}}
+
+  .risk-bars{display:flex;justify-content:center;gap:6px;margin:20px auto 0;max-width:200px}
+  .risk-bar{width:16px;height:40px;border-radius:3px;background:var(--card-border);position:relative;overflow:hidden}
+  .risk-bar .fill{position:absolute;bottom:0;left:0;right:0;border-radius:3px;animation:bar-fill 2s ease-in-out infinite}
+  .risk-bar:nth-child(1) .fill{height:30%;background:var(--green);animation-delay:0s}
+  .risk-bar:nth-child(2) .fill{height:45%;background:var(--green);animation-delay:.15s}
+  .risk-bar:nth-child(3) .fill{height:60%;background:var(--gold);animation-delay:.3s}
+  .risk-bar:nth-child(4) .fill{height:75%;background:var(--gold);animation-delay:.45s}
+  .risk-bar:nth-child(5) .fill{height:90%;background:var(--red);animation-delay:.6s}
+  .risk-bar:nth-child(6) .fill{height:55%;background:var(--gold);animation-delay:.75s}
+  .risk-bar:nth-child(7) .fill{height:35%;background:var(--green);animation-delay:.9s}
+  @keyframes bar-fill{0%,100%{opacity:.6}50%{opacity:1}}
+
+  .container{max-width:1060px;margin:0 auto;padding:0 28px}
+  section{padding:60px 0}
+  .section-title{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:12px;text-align:center}
+  .section-sub{text-align:center;color:var(--dim);font-size:14px;margin-bottom:36px;line-height:1.6}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:28px 20px;text-align:center;transition:border-color .3s,box-shadow .3s}
+  .card:hover{border-color:var(--gold-dim);box-shadow:var(--gold-glow)}
+  .card-icon{font-size:36px;margin-bottom:14px;display:block;animation:float 3s ease-in-out infinite}
+  .card h3{font-size:9px;color:var(--gold);margin-bottom:10px;letter-spacing:1px}
+  .card p{font-size:13px;color:#9CA3AF;line-height:1.6}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  .risk-levels{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+  .risk-level{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:20px;text-align:center}
+  .risk-level .score{font-family:'Press Start 2P',cursive;font-size:18px;margin-bottom:6px}
+  .risk-level .label{font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+  .risk-level .desc{font-size:12px;color:#9CA3AF;line-height:1.4}
+  .risk-low .score{color:var(--green)}
+  .risk-med .score{color:var(--gold)}
+  .risk-high .score{color:#F97316}
+  .risk-crit .score{color:var(--red)}
+
+  .pricing-box{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:32px;text-align:center;max-width:480px;margin:0 auto}
+  .pricing-box .price{font-family:'Press Start 2P',cursive;font-size:28px;color:#fff;margin:12px 0}
+  .pricing-box .price span{font-size:12px;color:var(--dim)}
+  .pricing-box .method{font-size:13px;color:var(--green);margin-top:8px}
+
+  .code-block{background:#050805;border:1px solid var(--card-border);border-radius:8px;padding:20px;font-family:'Courier New',monospace;font-size:12px;line-height:1.8;overflow-x:auto;color:#aaa;max-width:700px;margin:0 auto}
+  .code-block .kw{color:var(--gold)}
+  .code-block .str{color:var(--green)}
+  .code-block .cmt{color:#444}
+
+  .cta-section{text-align:center;padding:48px 0}
+  .cta-btn{display:inline-block;padding:14px 28px;font-family:'Press Start 2P',cursive;font-size:10px;border-radius:8px;text-decoration:none;transition:transform .2s,box-shadow .2s;cursor:pointer;border:none}
+  .cta-btn:hover{transform:translateY(-2px)}
+  .cta-btn.primary{background:var(--gold);color:#000;box-shadow:var(--gold-glow)}
+
+  .status-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--green);margin-bottom:20px}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  footer{text-align:center;padding:32px 28px;border-top:1px solid var(--card-border);font-size:11px;color:#333}
+  footer a{color:var(--gold);text-decoration:none;margin:0 8px}
+  footer .footer-links{margin-bottom:12px}
+  footer .footer-links a{color:var(--dim);font-size:11px;transition:color .2s}
+  footer .footer-links a:hover{color:var(--gold)}
+
+  @media(max-width:768px){
+    .hero h1{font-size:16px}
+    .cards{grid-template-columns:1fr}
+    .risk-levels{grid-template-columns:repeat(2,1fr)}
+    .nav-links{display:none}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:52px;right:16px;background:rgba(8,12,8,.97);border:1px solid var(--card-border);border-radius:8px;padding:14px 18px;gap:12px}
+    .hamburger{display:block}
+    .code-block{font-size:11px;padding:14px}
+  }
+  @media(max-width:480px){
+    .hero{padding:110px 20px 50px}
+    .hero h1{font-size:13px}
+    .risk-levels{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">ACHILLES</a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="/">HOME</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/docs">DOCS</a><a href="/noleak">NOLEAK</a><a href="/flowcore">FLOWCORE</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="gauge-wrap">
+    <div class="gauge-pulse"></div>
+    <div class="gauge-pulse"></div>
+    <div class="gauge-ring">
+      <span class="gauge-label">RISK</span>
+    </div>
+  </div>
+  <div class="status-badge"><span class="status-dot"></span> LIVE ON BASE MAINNET</div>
+  <h1>RISKORACLE</h1>
+  <p class="sub">Pre-Action Risk Scoring for AI Agents.<br>Every trade scored. Every leverage measured. Every position evaluated before execution.</p>
+  <div class="risk-bars">
+    <div class="risk-bar"><div class="fill"></div></div>
+    <div class="risk-bar"><div class="fill"></div></div>
+    <div class="risk-bar"><div class="fill"></div></div>
+    <div class="risk-bar"><div class="fill"></div></div>
+    <div class="risk-bar"><div class="fill"></div></div>
+    <div class="risk-bar"><div class="fill"></div></div>
+    <div class="risk-bar"><div class="fill"></div></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <section>
+    <div class="section-title">WHAT IT SCORES</div>
+    <p class="section-sub">Multi-factor risk analysis on every agent action</p>
+    <div class="cards">
+      <div class="card">
+        <span class="card-icon">&#x1F4C8;</span>
+        <h3>LEVERAGE RISK</h3>
+        <p>Evaluates leverage exposure relative to position size and market volatility. High leverage on volatile assets triggers elevated risk scores.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#x1F4B0;</span>
+        <h3>EXPOSURE ANALYSIS</h3>
+        <p>Measures total capital at risk across all open positions. Prevents agents from concentrating too much capital in correlated trades.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#x1F30A;</span>
+        <h3>MARKET CONDITIONS</h3>
+        <p>Factors in real-time volatility, liquidity depth, and market regime. Scores adjust dynamically as conditions change.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">RISK LEVELS</div>
+    <p class="section-sub">Every action receives a score from 0 to 10</p>
+    <div class="risk-levels">
+      <div class="risk-level risk-low">
+        <div class="score">0-2</div>
+        <div class="label">LOW</div>
+        <div class="desc">Safe to execute. Minimal risk exposure detected.</div>
+      </div>
+      <div class="risk-level risk-med">
+        <div class="score">3-5</div>
+        <div class="label">MEDIUM</div>
+        <div class="desc">Proceed with caution. Some risk factors present.</div>
+      </div>
+      <div class="risk-level risk-high">
+        <div class="score">6-8</div>
+        <div class="label">HIGH</div>
+        <div class="desc">Elevated risk. Consider reducing size or leverage.</div>
+      </div>
+      <div class="risk-level risk-crit">
+        <div class="score">9-10</div>
+        <div class="label">CRITICAL</div>
+        <div class="desc">Do not execute. Circuit breaker territory.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">PRICING</div>
+    <p class="section-sub">Simple per-call pricing. No subscriptions. No minimums.</p>
+    <div class="pricing-box">
+      <h3 style="font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:8px">PER CALL</h3>
+      <div class="price">$0.01 <span>/ call</span></div>
+      <div class="method">x402 USDC on Base Mainnet</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">INTEGRATION</div>
+    <p class="section-sub">One POST request. Instant risk verdict.</p>
+    <div class="code-block">
+<span class="cmt">// Score risk before executing a trade</span>
+<span class="kw">POST</span> /x402/riskoracle
+
+{
+  <span class="str">"action"</span>: <span class="str">"open_position"</span>,
+  <span class="str">"asset"</span>: <span class="str">"ETH"</span>,
+  <span class="str">"direction"</span>: <span class="str">"long"</span>,
+  <span class="str">"amount_usd"</span>: <span class="kw">5000</span>,
+  <span class="str">"leverage"</span>: <span class="kw">5</span>
+}
+
+<span class="cmt">// Response</span>
+{
+  <span class="str">"risk_score"</span>: <span class="kw">6.8</span>,
+  <span class="str">"risk_level"</span>: <span class="str">"HIGH"</span>,
+  <span class="str">"factors"</span>: {
+    <span class="str">"leverage"</span>: <span class="kw">7.5</span>,
+    <span class="str">"exposure"</span>: <span class="kw">6.0</span>,
+    <span class="str">"volatility"</span>: <span class="kw">5.2</span>
+  },
+  <span class="str">"recommendation"</span>: <span class="str">"Reduce leverage to 3x or lower"</span>
+}
+    </div>
+  </section>
+
+  <div class="cta-section">
+    <a href="https://achillesalpha.onrender.com/ep" class="cta-btn primary">Test RiskOracle</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">HOME</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/docs">DOCS</a><a href="/noleak">NOLEAK</a><a href="/flowcore">FLOWCORE</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a>
+  </div>
+  <p>ACHILLES &mdash; Project Olympus &mdash; <a href="https://twitter.com/AchillesAlphaAI" target="_blank">@AchillesAlphaAI</a></p>
+</footer>
+
+</body>
+</html>

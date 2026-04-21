@@ -1,0 +1,90 @@
+{
+  "agent": "achilles",
+  "version": "2026.4.16",
+  "name": "EP AgentIAM — x402 Paid Services",
+  "description": "Nine paid x402 endpoints for autonomous agents on Base Mainnet. Pre-execution validation, risk scoring, integrity checks, memory verification, secure tool execution, orchestration, and Delphi intelligence. All settle in USDC via x402.",
+  "payment": {
+    "protocol": "x402",
+    "x402Version": 2,
+    "network": "base",
+    "caip2": "eip155:8453",
+    "asset": "USDC",
+    "asset_address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "wallet": "0x069c6012E053DFBf50390B19FaE275aD96D22ed7",
+    "scheme": "exact",
+    "flow": "https://achillesalpha.onrender.com/llms-pay.txt"
+  },
+  "paid_endpoints": {
+    "validate": {
+      "url": "https://achillesalpha.onrender.com/x402/validate",
+      "method": "POST",
+      "price_usdc": "0.01",
+      "description": "Full policy validation for agent proposals — risk score, compliance flags, proof_hash."
+    },
+    "noleak": {
+      "url": "https://achillesalpha.onrender.com/x402/noleak",
+      "method": "POST",
+      "price_usdc": "0.01",
+      "description": "Execution integrity check — tamper detection, injection prevention, unauthorized data flow."
+    },
+    "memguard": {
+      "url": "https://achillesalpha.onrender.com/x402/memguard",
+      "method": "POST",
+      "price_usdc": "0.01",
+      "description": "Memory state verification — drift, corruption, unauthorized modification detection."
+    },
+    "riskoracle": {
+      "url": "https://achillesalpha.onrender.com/x402/riskoracle",
+      "method": "POST",
+      "price_usdc": "0.01",
+      "description": "Pre-action risk scoring — multi-factor analysis before trade, transfer, or deploy."
+    },
+    "secureexec": {
+      "url": "https://achillesalpha.onrender.com/x402/secureexec",
+      "method": "POST",
+      "price_usdc": "0.01",
+      "description": "Sandboxed tool execution validation with proof_hash generation."
+    },
+    "flowcore": {
+      "url": "https://achillesalpha.onrender.com/x402/flowcore",
+      "method": "POST",
+      "price_usdc": "0.02",
+      "description": "Full orchestration pipeline — NoLeak + RiskOracle + SecureExec + MemGuard in one call."
+    },
+    "delphi-latest-signals": {
+      "url": "https://achillesalpha.onrender.com/x402/latest-signals",
+      "method": "POST",
+      "price_usdc": "0.001",
+      "description": "Latest Delphi intelligence signals — security, defi, market, ai-ecosystem."
+    },
+    "delphi-signal-query": {
+      "url": "https://achillesalpha.onrender.com/x402/signal-query",
+      "method": "POST",
+      "price_usdc": "0.002",
+      "description": "Query Delphi intelligence signals by topic — cross-referenced, relevance-scored."
+    },
+    "delphi-intelligence-report": {
+      "url": "https://achillesalpha.onrender.com/x402/intelligence-report",
+      "method": "POST",
+      "price_usdc": "0.05",
+      "description": "Deep intelligence report — comprehensive analysis with contradiction detection and confidence score."
+    }
+  },
+  "free_endpoints": {
+    "status": "https://achillesalpha.onrender.com/ep/status",
+    "manifest": "https://achillesalpha.onrender.com/ep/manifest.json",
+    "skill": "https://achillesalpha.onrender.com/ep/SKILL.md",
+    "docs": "https://achillesalpha.onrender.com/ep/llms-full.txt",
+    "pay_flow": "https://achillesalpha.onrender.com/llms-pay.txt"
+  },
+  "acp": {
+    "agent_id": "28821",
+    "offering": "ep_guard",
+    "marketplace": "https://app.virtuals.io/acp"
+  },
+  "identity": {
+    "erc8004": true,
+    "erc7710": true,
+    "talent_protocol": true
+  }
+}

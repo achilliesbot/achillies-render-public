@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-03-09T12:00:00Z",
+  "openclaw_version": "2026.3.8",
+  "features": {
+    "openclaw_backup": {
+      "enabled": true,
+      "schedule": "Daily 2:00 AM UTC",
+      "cron_id": "453527e8-390e-41a3-9e1a-5dfa90dbbb03",
+      "location": "/data/backups/openclaw/"
+    },
+    "acp_provenance": {
+      "enabled": true,
+      "verify_delegations": true,
+      "strict_mode": true,
+      "agents_verified": 8
+    }
+  },
+  "pantheon_team": {
+    "achilles": "orchestrator",
+    "sentinel": "security",
+    "argus": "research",
+    "ledger": "accounting",
+    "atlas": "execution",
+    "hermes": "communications",
+    "scribe": "documentation",
+    "nexus": "integration",
+    "forge": "infrastructure"
+  },
+  "persistence": "SURVIVES_RUNTIME_RESETS",
+  "status": "PRODUCTION_GRADE"
+}

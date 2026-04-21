@@ -1,0 +1,105 @@
+ACHILLES EP — x402 Payment Flow for Autonomous Agents
+======================================================
+
+Version: x402 v2
+Network: Base Mainnet (CAIP-2: eip155:8453)
+Asset:   USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)
+PayTo:   0x069c6012E053DFBf50390B19FaE275aD96D22ed7
+Scheme:  exact
+
+THREE STEPS
+-----------
+
+Step 1 — Request the resource. Server replies 402 with payment challenge
+in the PAYMENT-REQUIRED response header (base64 JSON).
+
+  curl -i -X POST https://achillesalpha.onrender.com/x402/validate \
+    -H 'Content-Type: application/json' \
+    -d '{"agent_id":"your-agent","action":"trade","context":{"trade_value":1000}}'
+
+  HTTP/2 402
+  payment-required: <base64>
+
+  Decoded:
+  {
+    "x402Version": 2,
+    "error": "Payment required",
+    "resource": {"url": "...", "description": "...", "mimeType": "application/json"},
+    "accepts": [{
+      "scheme": "exact",
+      "network": "eip155:8453",
+      "amount": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "payTo": "0x069c6012E053DFBf50390B19FaE275aD96D22ed7",
+      "maxTimeoutSeconds": 300,
+      "extra": {"name": "USDC", "version": "2"}
+    }]
+  }
+
+Step 2 — Sign an EIP-3009 transferWithAuthorization USDC payment for
+the `amount` to the `payTo` address on Base. Encode the signed
+PaymentPayload as base64.
+
+  Recommended SDKs:
+    - @x402/core (TypeScript, v2.9+)
+    - @x402/evm   (EVM scheme server/client)
+    - x402 via CDP facilitator: api.cdp.coinbase.com/platform/v2/x402
+
+Step 3 — Retry the same request with the signed payload in the
+X-PAYMENT header. On success the server settles the payment through
+the CDP facilitator, returns 200 with the resource, and sets
+PAYMENT-RESPONSE header with settlement proof.
+
+  curl -i -X POST https://achillesalpha.onrender.com/x402/validate \
+    -H 'Content-Type: application/json' \
+    -H 'X-PAYMENT: <base64-signed-payload>' \
+    -d '{"agent_id":"your-agent","action":"trade","context":{"trade_value":1000}}'
+
+NINE PAID ENDPOINTS
+-------------------
+
+| Path                       | Method | Price (USDC) | Purpose                                                |
+|----------------------------|--------|--------------|--------------------------------------------------------|
+| /x402/validate             | POST   | 0.01         | Full policy validation, risk, proof_hash               |
+| /x402/noleak               | POST   | 0.01         | Execution integrity / leak detection                   |
+| /x402/memguard             | POST   | 0.01         | Memory state verification                              |
+| /x402/riskoracle           | POST   | 0.01         | Pre-action multi-factor risk score                     |
+| /x402/secureexec           | POST   | 0.01         | Sandboxed tool execution validation                    |
+| /x402/flowcore             | POST   | 0.02         | Full orchestration pipeline                            |
+| /x402/latest-signals       | POST   | 0.001        | Latest Delphi intelligence signals                     |
+| /x402/signal-query         | POST   | 0.002        | Query Delphi signals by topic                          |
+| /x402/intelligence-report  | POST   | 0.05         | Deep cross-referenced intelligence report              |
+
+All nine return HTTP 402 with a PAYMENT-REQUIRED header on first request
+and HTTP 200 with the result after a valid X-PAYMENT is submitted.
+
+SMOKE TEST (no payment, just check 402 challenge is served)
+-----------------------------------------------------------
+
+  for p in validate noleak memguard riskoracle secureexec flowcore \
+           latest-signals signal-query intelligence-report; do
+    curl -s -o /dev/null -w "$p: %{http_code}\n" \
+      -X POST https://achillesalpha.onrender.com/x402/$p
+  done
+  # expect: 402 for every path
+
+DISCOVERY SURFACES
+------------------
+
+  - https://achillesalpha.onrender.com/.well-known/agent-services.json
+  - https://achillesalpha.onrender.com/agent.json
+  - https://achillesalpha.onrender.com/ep/manifest.json
+  - https://achillesalpha.onrender.com/ep/SKILL.md
+  - https://achillesalpha.onrender.com/ep/llms-full.txt
+  - 402index.io directory listing (all nine endpoints)
+  - Virtuals ACP marketplace (agent_id: 28821)
+
+CONTACT
+-------
+
+  Operator: Achilles
+  Commander: Zeus
+  Wallet:    0x069c6012E053DFBf50390B19FaE275aD96D22ed7 (canonical, payTo for all x402 settlements)
+  Bot:       @AchillesAlphaAI (X/Twitter)
+
+Last updated: 2026-04-16

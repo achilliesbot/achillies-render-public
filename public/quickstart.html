@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EP AgentIAM — 30-Second Integration</title>
+<meta name="description" content="Add risk scoring, execution integrity, and memory verification to your AI agent in 3 lines of code. x402 USDC micropayments on Base.">
+<style>
+:root{--bg:#080C08;--card:#0e130e;--gold:#F59E0B;--green:#22c55e;--dim:#6b7280;--text:#e5e7eb;--border:#1a2e1a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'SF Mono','Fira Code',monospace;line-height:1.7;padding:2rem;max-width:800px;margin:0 auto}
+h1{color:var(--gold);font-size:1.8rem;margin-bottom:.5rem}
+h2{color:var(--green);font-size:1.2rem;margin:2rem 0 1rem;border-bottom:1px solid var(--border);padding-bottom:.5rem}
+h3{color:var(--gold);font-size:1rem;margin:1.5rem 0 .5rem}
+p{margin:.5rem 0;color:var(--dim);font-size:.9rem}
+.hero{text-align:center;padding:2rem 0 1rem}
+.hero p{color:var(--text);font-size:1rem}
+.tag{display:inline-block;background:var(--card);border:1px solid var(--border);padding:.2rem .6rem;border-radius:4px;font-size:.75rem;color:var(--gold);margin:.2rem}
+pre{background:#0a0f0a;border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;font-size:.85rem;margin:1rem 0;position:relative}
+code{color:var(--green)}
+.comment{color:var(--dim)}
+.price{color:var(--gold);font-weight:bold}
+.copy-btn{position:absolute;top:.5rem;right:.5rem;background:var(--card);border:1px solid var(--border);color:var(--dim);padding:.3rem .6rem;border-radius:4px;cursor:pointer;font-size:.7rem}
+.copy-btn:hover{color:var(--gold);border-color:var(--gold)}
+table{width:100%;border-collapse:collapse;margin:1rem 0}
+th,td{text-align:left;padding:.5rem;border-bottom:1px solid var(--border);font-size:.85rem}
+th{color:var(--gold)}
+td:nth-child(2){color:var(--green)}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+.step{counter-increment:step;position:relative;padding-left:2.5rem;margin:1.5rem 0}
+.step::before{content:counter(step);position:absolute;left:0;top:0;width:1.8rem;height:1.8rem;background:var(--card);border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.8rem;font-weight:bold}
+.steps{counter-reset:step}
+.note{background:#0a0f0a;border-left:3px solid var(--gold);padding:.8rem 1rem;margin:1rem 0;font-size:.85rem}
+footer{text-align:center;margin-top:3rem;padding-top:1rem;border-top:1px solid var(--border);color:var(--dim);font-size:.75rem}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<h1>EP AgentIAM — 30-Second Integration</h1>
+<p>Add risk scoring to your AI agent in 3 lines of code</p>
+<div style="margin-top:.5rem">
+<span class="tag">x402</span>
+<span class="tag">USDC on Base</span>
+<span class="tag">No API key</span>
+<span class="tag">$0.005-$0.02/call</span>
+</div>
+</div>
+
+<h2>Endpoints &amp; Pricing</h2>
+<table>
+<tr><th>Endpoint</th><th>Price</th><th>Use Case</th></tr>
+<tr><td><code>/x402/risk-check</code></td><td class="price">$0.005</td><td>Quick risk score</td></tr>
+<tr><td><code>/x402/noleak</code></td><td class="price">$0.01</td><td>Execution integrity</td></tr>
+<tr><td><code>/x402/memguard</code></td><td class="price">$0.01</td><td>Memory verification</td></tr>
+<tr><td><code>/x402/riskoracle</code></td><td class="price">$0.01</td><td>Pre-action risk scoring</td></tr>
+<tr><td><code>/x402/secureexec</code></td><td class="price">$0.01</td><td>Tool call security</td></tr>
+<tr><td><code>/x402/validate</code></td><td class="price">$0.01</td><td>Policy validation</td></tr>
+<tr><td><code>/x402/delphi</code></td><td class="price">$0.01</td><td>Intelligence signals</td></tr>
+<tr><td><code>/x402/flowcore</code></td><td class="price">$0.02</td><td>Full pipeline (all checks)</td></tr>
+</table>
+
+<h2>Quick Start</h2>
+
+<div class="steps">
+<div class="step">
+<h3>Install x402 client</h3>
+<pre><button class="copy-btn" onclick="navigator.clipboard.writeText('npm install @x402/fetch')">copy</button><code>npm install @x402/fetch</code></pre>
+</div>
+
+<div class="step">
+<h3>Set your wallet private key</h3>
+<pre><code><span class="comment">// Your Base wallet with USDC</span>
+export PRIVATE_KEY="0x..."</code></pre>
+</div>
+
+<div class="step">
+<h3>Make a paid call</h3>
+<pre><button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.querySelector('code').textContent)">copy</button><code><span class="comment">// That's it. x402 handles payment automatically.</span>
+import { fetchWithPayment } from "@x402/fetch";
+
+const res = await fetchWithPayment(
+  "https://achillesalpha.onrender.com/x402/riskoracle",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      agent_id: "my-trading-agent",
+      action: "swap 500 USDC to ETH",
+      value: 500
+    })
+  },
+  { privateKey: process.env.PRIVATE_KEY }
+);
+
+const result = await res.json();
+console.log(result);
+<span class="comment">// { risk_score: 0.23, recommendation: "proceed", factors: [...] }</span></code></pre>
+</div>
+</div>
+
+<h2>Python</h2>
+<pre><button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentElement.querySelector('code').textContent)">copy</button><code><span class="comment"># pip install x402-python</span>
+from x402 import Client
+
+client = Client(private_key="0x...", network="base")
+result = client.post(
+    "https://achillesalpha.onrender.com/x402/riskoracle",
+    json={"agent_id": "my-agent", "action": "transfer 100 USDC"}
+)
+print(result.json())</code></pre>
+
+<h2>curl (test without payment)</h2>
+<pre><button class="copy-btn" onclick="navigator.clipboard.writeText('curl -X POST https://achillesalpha.onrender.com/x402/riskoracle -H &quot;Content-Type: application/json&quot; -d \'{\&quot;agent_id\&quot;:\&quot;test\&quot;,\&quot;action\&quot;:\&quot;swap 100 USDC\&quot;}\'')">copy</button><code><span class="comment"># Returns 402 + payment spec (no USDC needed to test)</span>
+curl -X POST https://achillesalpha.onrender.com/x402/riskoracle \
+  -H "Content-Type: application/json" \
+  -d '{"agent_id":"test","action":"swap 100 USDC"}'</code></pre>
+
+<h2>FlowCore — Full Pipeline ($0.02)</h2>
+<p>Run all 4 checks in one call:</p>
+<pre><code>const res = await fetchWithPayment(
+  "https://achillesalpha.onrender.com/x402/flowcore",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      agent_id: "my-agent",
+      action: "deploy contract",
+      value: 1000,
+      memory_hash: "abc123"
+    })
+  },
+  { privateKey: process.env.PRIVATE_KEY }
+);
+<span class="comment">// { approved: true, risk_score: 0.15, integrity: "clean", pipeline_hash: "..." }</span></code></pre>
+
+<div class="note">
+<strong>No API key needed.</strong> Payment is the authentication. Your agent pays $0.005-$0.02 USDC per call automatically via x402. Works with any x402-compatible client.
+</div>
+
+<h2>Discovery</h2>
+<table>
+<tr><td>x402 manifest</td><td><a href="/.well-known/x402.json">/.well-known/x402.json</a></td></tr>
+<tr><td>OpenAPI spec</td><td><a href="/openapi.json">/openapi.json</a></td></tr>
+<tr><td>LLM docs</td><td><a href="/llms.txt">/llms.txt</a></td></tr>
+<tr><td>AI plugin</td><td><a href="/.well-known/ai-plugin.json">/.well-known/ai-plugin.json</a></td></tr>
+<tr><td>MCP manifest</td><td><a href="/.well-known/mcp.json">/.well-known/mcp.json</a></td></tr>
+<tr><td>Agent card</td><td><a href="/.well-known/agent.json">/.well-known/agent.json</a></td></tr>
+<tr><td>Status (free)</td><td><a href="/x402/status">/x402/status</a></td></tr>
+</table>
+
+<footer>
+Achilles EP AgentIAM &middot; x402 USDC on Base &middot; <a href="/ep">Full Docs</a> &middot; <a href="/">Home</a>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACHILLES — Autonomous AI Agent Command Center</title>
+<meta name="description" content="Achilles: Autonomous AI agent. Trades, validates, deploys — 24/7. Execution Protocol, DELPHI intelligence, x402 micropayments. Built for the agent economy.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8XZ094X6YT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-8XZ094X6YT');</script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080C08;--card:#0e130e;--card-border:#1a241a;
+    --gold:#F59E0B;--gold-dim:rgba(245,158,11,0.25);--gold-glow:0 0 24px rgba(245,158,11,0.25);
+    --green:#22C55E;--green-dim:rgba(34,197,94,0.25);
+    --red:#EF4444;
+    --text:#E5E7EB;--dim:#6B7280;--flame:#ff6600;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+  h1,h2,h3{font-family:'Press Start 2P',cursive}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,8,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+  .nav-logo{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);text-decoration:none}
+  .nav-links{display:flex;gap:18px}
+  .nav-links a{color:var(--dim);text-decoration:none;font-size:12px;letter-spacing:.5px;font-weight:500;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .hamburger{display:none;cursor:pointer;color:var(--gold);font-size:22px;background:none;border:none}
+
+  /* HERO */
+  .hero{position:relative;padding:120px 28px 60px;overflow:hidden;min-height:600px;display:flex;align-items:center}
+  .hero-canvas{position:absolute;inset:0;z-index:0}
+  .hero-inner{display:flex;align-items:center;justify-content:space-between;max-width:1100px;margin:0 auto;width:100%;position:relative;z-index:1}
+  .hero-text{max-width:55%}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border:1px solid var(--green-dim);border-radius:20px;font-size:12px;color:var(--green);margin-bottom:16px}
+  .hero-badge .dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+  .hero h1{font-size:32px;color:var(--gold);letter-spacing:5px;margin-bottom:14px;text-shadow:0 0 40px rgba(245,158,11,0.3)}
+  .hero .typewriter-wrap{font-family:'Courier New',monospace;font-size:14px;color:var(--gold);letter-spacing:2px;margin-bottom:20px;min-height:1.5em}
+  .hero .typewriter-wrap .cursor{animation:blink 1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero .subtitle{font-size:15px;color:var(--dim);line-height:1.7;margin-bottom:28px}
+  .hero-stats{display:flex;gap:28px;margin-bottom:28px}
+  .hero-stat{text-align:center}
+  .hero-stat-value{font-family:'Press Start 2P',cursive;font-size:16px;color:var(--gold);display:block}
+  .hero-stat-label{font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+  .hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .btn-primary{display:inline-block;padding:12px 24px;font-family:'Press Start 2P',cursive;font-size:10px;background:var(--gold);color:#000;border-radius:8px;text-decoration:none;box-shadow:var(--gold-glow);transition:transform .2s}
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-secondary{display:inline-block;padding:12px 24px;font-family:'Press Start 2P',cursive;font-size:10px;background:transparent;color:var(--gold);border:1px solid var(--gold-dim);border-radius:8px;text-decoration:none;transition:transform .2s}
+  .btn-secondary:hover{transform:translateY(-2px)}
+
+  .hero-warrior{max-height:420px;width:auto;filter:drop-shadow(0 0 40px rgba(245,158,11,0.2));animation:warriorFloat 5s ease-in-out infinite}
+  @keyframes warriorFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+  /* STATS BAR */
+  .stats-bar{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;padding:22px 28px;border-top:1px solid var(--card-border);border-bottom:1px solid var(--card-border);background:rgba(14,19,14,0.5)}
+  .stat-item{text-align:center}
+  .stat-num{font-family:'Press Start 2P',cursive;font-size:18px;color:var(--gold)}
+  .stat-lbl{font-size:10px;color:var(--dim);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+
+  /* CONTAINER */
+  .container{max-width:1060px;margin:0 auto;padding:0 28px}
+  section{padding:64px 0}
+  .section-title{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:12px;text-align:center}
+  .section-sub{text-align:center;color:var(--dim);font-size:14px;margin-bottom:36px;line-height:1.6}
+
+  /* WHAT IS ACHILLES - 3 PILLARS */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .pillar{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:28px 20px;text-align:center;transition:border-color .3s,box-shadow .3s}
+  .pillar:hover{border-color:var(--gold-dim);box-shadow:var(--gold-glow)}
+  .pillar-icon{font-size:36px;margin-bottom:14px;display:block;animation:float 3s ease-in-out infinite}
+  .pillar h3{font-size:10px;color:var(--gold);margin-bottom:10px;letter-spacing:1px}
+  .pillar p{font-size:13px;color:#9CA3AF;line-height:1.6}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  /* LIVE OPERATIONS */
+  .pnl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+  .pnl-card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:22px;text-align:center;transition:border-color .3s}
+  .pnl-card:hover{border-color:var(--gold-dim)}
+  .pnl-card h4{font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:10px}
+  .pnl-card .big-num{font-family:'Press Start 2P',cursive;font-size:16px;color:var(--green);margin-bottom:6px}
+  .pnl-card .detail{font-size:12px;color:#9CA3AF}
+
+  /* EP DEMO */
+  .ep-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  .ep-pillars{list-style:none;padding:0}
+  .ep-pillars li{padding:10px 0;border-bottom:1px solid var(--card-border);font-size:13px;color:#9CA3AF;display:flex;align-items:center;gap:10px}
+  .ep-pillars li span{font-size:18px}
+  .ep-pillars li strong{color:var(--gold)}
+  .terminal{background:#050805;border:1px solid var(--card-border);border-radius:10px;overflow:hidden}
+  .terminal-header{background:rgba(245,158,11,0.08);padding:10px 16px;font-family:'Press Start 2P',cursive;font-size:8px;color:var(--gold);letter-spacing:1px}
+  .terminal input{width:calc(100% - 32px);margin:12px 16px 8px;padding:8px 12px;background:var(--card);border:1px solid var(--card-border);border-radius:6px;color:var(--text);font-family:'Courier New',monospace;font-size:13px}
+  .terminal button{margin:0 16px 12px;padding:8px 18px;background:var(--gold);color:#000;border:none;border-radius:6px;font-family:'Press Start 2P',cursive;font-size:9px;cursor:pointer;transition:transform .2s}
+  .terminal button:hover{transform:translateY(-1px)}
+  .terminal-output{padding:12px 16px;font-family:'Courier New',monospace;font-size:11px;color:#9CA3AF;line-height:1.6;max-height:180px;overflow-y:auto;white-space:pre-wrap}
+
+  /* PRODUCT GRID */
+  .product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+  .product-card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:24px 20px;text-decoration:none;color:var(--text);transition:border-color .3s,box-shadow .3s,transform .2s;display:flex;flex-direction:column}
+  .product-card:hover{border-color:var(--gold-dim);box-shadow:var(--gold-glow);transform:translateY(-3px)}
+  .product-icon{font-size:28px;margin-bottom:14px}
+  .product-card h3{font-size:10px;color:var(--gold);margin-bottom:10px;letter-spacing:1px}
+  .product-card p{font-size:13px;color:#9CA3AF;line-height:1.6;flex:1}
+  .product-price{margin-top:14px;font-family:'Press Start 2P',cursive;font-size:9px;color:var(--green)}
+
+  /* OLYMPUS SECTION */
+  .olympus-hero{text-align:center;margin-bottom:32px}
+  .olympus-count{font-family:'Press Start 2P',cursive;font-size:42px;color:var(--gold);text-shadow:var(--gold-glow)}
+  .olympus-label{font-size:11px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:6px}
+  .rank-bars{max-width:600px;margin:0 auto 28px}
+  .rank-bar-wrap{margin-bottom:12px}
+  .rank-label{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);letter-spacing:1px;margin-bottom:4px}
+  .rank-bar{height:8px;background:var(--card-border);border-radius:4px;overflow:hidden}
+  .rank-fill{height:100%;background:var(--gold);border-radius:4px;transition:width 1s ease}
+  .rank-fill.green{background:var(--green)}
+
+  /* ARMORY */
+  .armory-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .armory-card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:22px;transition:border-color .3s}
+  .armory-card:hover{border-color:var(--gold-dim)}
+  .armory-card h3{font-size:10px;color:var(--gold);margin-bottom:8px;letter-spacing:1px}
+  .armory-card p{font-size:13px;color:#9CA3AF;line-height:1.5;margin-bottom:12px}
+  .armory-price{font-family:'Press Start 2P',cursive;font-size:12px;color:#fff;margin-bottom:14px}
+  .armory-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .btn-stripe{padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:6px;font-family:'Press Start 2P',cursive;font-size:8px;cursor:pointer;transition:transform .2s}
+  .btn-stripe:hover{transform:translateY(-1px)}
+  .btn-usdc{padding:8px 16px;background:transparent;color:var(--green);border:1px solid var(--green-dim);border-radius:6px;font-family:'Press Start 2P',cursive;font-size:8px;cursor:pointer;transition:transform .2s}
+  .btn-usdc:hover{transform:translateY(-1px)}
+
+  /* TRIBUTE */
+  .tribute-box{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:32px;text-align:center;max-width:600px;margin:0 auto}
+  .wallet-addr{font-family:'Courier New',monospace;font-size:12px;color:var(--gold);padding:10px 16px;background:rgba(245,158,11,0.08);border:1px solid var(--gold-dim);border-radius:6px;word-break:break-all;margin:16px 0}
+  .network-badge{font-size:12px;color:var(--green);font-weight:600}
+
+  /* HOW IT WORKS */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative}
+  .steps::before{content:'';position:absolute;top:40px;left:16%;right:16%;height:2px;background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-dim));z-index:0}
+  .step{text-align:center;position:relative;z-index:1}
+  .step-num{width:56px;height:56px;margin:0 auto 16px;background:var(--card);border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Press Start 2P',cursive;font-size:16px;color:var(--gold);box-shadow:var(--gold-glow)}
+  .step h3{font-size:11px;color:var(--gold);margin-bottom:8px}
+  .step p{font-size:13px;color:#9CA3AF;line-height:1.6}
+
+  /* CTA */
+  .cta-section{text-align:center;padding:48px 0}
+  .section-link{display:inline-block;font-size:12px;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-dim);padding-bottom:2px;transition:border-color .2s}
+  .section-link:hover{border-color:var(--gold)}
+
+  /* FOOTER */
+  footer{text-align:center;padding:32px 28px;border-top:1px solid var(--card-border);font-size:11px;color:#333}
+  footer a{color:var(--flame);text-decoration:none}
+  .footer-links{margin-bottom:12px}
+  .footer-links a{color:var(--dim);font-size:11px;margin:0 8px;transition:color .2s}
+  .footer-links a:hover{color:var(--gold)}
+
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* TICKER */
+  .ticker-wrap{background:var(--card);border-top:1px solid var(--card-border);border-bottom:1px solid var(--card-border);overflow:hidden;padding:10px 0;position:relative}
+  .ticker{display:flex;white-space:nowrap;animation:ticker-scroll 40s linear infinite}
+  .ticker-item{padding:0 48px;font-size:12px;color:var(--gold);font-family:'Courier New',monospace;letter-spacing:1px}
+  @keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  @media(max-width:768px){
+    .hero{padding:110px 20px 50px;min-height:auto}
+    .hero-inner{flex-direction:column;text-align:center}
+    .hero-text{max-width:100%}
+    .hero-warrior{max-height:240px;margin-top:24px}
+    .hero h1{font-size:20px}
+    .hero-stats{justify-content:center}
+    .hero-ctas{justify-content:center}
+    .pillars{grid-template-columns:1fr}
+    .pnl-grid{grid-template-columns:1fr}
+    .ep-grid{grid-template-columns:1fr}
+    .stats-bar{gap:20px}
+    .stat-num{font-size:14px}
+    .steps{grid-template-columns:1fr;gap:32px}
+    .steps::before{display:none}
+    .nav-links{display:none}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:52px;right:16px;background:rgba(8,12,8,.97);border:1px solid var(--card-border);border-radius:8px;padding:14px 18px;gap:12px}
+    .hamburger{display:block}
+  }
+  @media(max-width:480px){
+    .product-grid{grid-template-columns:1fr}
+    .armory-grid{grid-template-columns:1fr}
+    .hero-stats{flex-wrap:wrap;gap:16px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">ACHILLES</a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="/" class="active">HOME</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/strategos" style="position:relative">STRATEGOS <sup style="font-size:7px;color:#F59E0B;letter-spacing:0.5px;vertical-align:super">SOON</sup></a><a href="/docs">DOCS</a><a href="/noleak">NOLEAK</a><a href="/flowcore">FLOWCORE</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge"><span class="dot"></span> AUTONOMOUS — OPERATIONAL</div>
+      <h1>ACHILLES</h1>
+      <div class="typewriter-wrap"><span id="typewriter"></span><span class="cursor">_</span></div>
+      <p class="subtitle">Autonomous AI agent that trades, validates, and deploys — 24/7, no humans required. Infrastructure for the agent economy.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="hero-stat-value" id="stat-warriors">0</span><span class="hero-stat-label">WARRIORS</span></div>
+        <div class="hero-stat"><span class="hero-stat-value" id="stat-trades">0</span><span class="hero-stat-label">TRADES</span></div>
+        <div class="hero-stat"><span class="hero-stat-value" id="stat-treasury">$0</span><span class="hero-stat-label">TREASURY</span></div>
+        <div class="hero-stat"><span class="hero-stat-value" id="stat-winrate">0%</span><span class="hero-stat-label">WIN RATE</span></div>
+      </div>
+      <div class="hero-ctas">
+        <a href="/olympus" class="btn-primary">ENTER THE ARMY</a>
+        <a href="/ep" class="btn-secondary">VALIDATE WITH EP</a>
+      </div>
+    </div>
+    <img src="/achilles-warrior.png" class="hero-warrior" alt="Achilles">
+  </div>
+</div>
+
+<!-- LIVE STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num" id="sEpHits">--</div><div class="stat-lbl">EP Validations</div></div>
+  <div class="stat-item"><div class="stat-num" id="sDelphiSignals">--</div><div class="stat-lbl">DELPHI Signals</div></div>
+  <div class="stat-item"><div class="stat-num" id="sEndpoints">9</div><div class="stat-lbl">Paid Endpoints</div></div>
+  <div class="stat-item"><div class="stat-num" id="sUptime">--</div><div class="stat-lbl">Uptime</div></div>
+</div>
+
+<!-- TICKER BANNER -->
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker"></div>
+</div>
+
+<div class="container">
+
+  <!-- WHAT IS ACHILLES -->
+  <section>
+    <div class="section-title">WHAT IS ACHILLES</div>
+    <div class="section-sub">A fully autonomous AI agent that trades, validates, and deploys — 24/7, no humans required.</div>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="pillar-icon">&#x1F4C8;</span>
+        <h3>TRADES</h3>
+        <p>Copy trades from whale wallets on Hyperliquid. Snipes tokens on Base. Trades prediction markets on Polymarket. All autonomous with QMD pre-trade scoring.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">&#x1F6E1;</span>
+        <h3>VALIDATES</h3>
+        <p>Every agent action passes through Execution Protocol before execution. Cryptographic proof hashes, policy enforcement, and swarm coordination — AgentIAM for the autonomous economy.</p>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">&#x2694;</span>
+        <h3>DEPLOYS</h3>
+        <p>The Olympus Network grows. Warriors are forged and deployed into the hive. Intelligence flows back. Each warrior rises through ranks from Recruit to Olympian.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE OPERATIONS -->
+  <section>
+    <div class="section-title">LIVE OPERATIONS</div>
+    <div class="section-sub">Real performance. Real trades. No simulations.</div>
+    <div class="pnl-grid">
+      <div class="pnl-card">
+        <h4>COPY TRADER</h4>
+        <div class="big-num" id="pnl-copy-trades">-</div>
+        <div class="detail" id="pnl-copy-detail">Loading...</div>
+      </div>
+      <div class="pnl-card">
+        <h4>TOKEN SNIPER</h4>
+        <div class="big-num">SCANNING</div>
+        <div class="detail">Base chain every 30s</div>
+      </div>
+      <div class="pnl-card">
+        <h4>POLYMARKET</h4>
+        <div class="big-num" id="pnl-poly-trades">-</div>
+        <div class="detail" id="pnl-poly-detail">Loading...</div>
+      </div>
+    </div>
+    <div style="text-align:center"><a href="/pnl" class="section-link">VIEW FULL INTEL &#x2192;</a></div>
+  </section>
+
+  <!-- SERVICES -->
+  <section>
+    <div class="section-title">SERVICES</div>
+    <div class="section-sub">Every service returns HTTP 402. Pay with USDC on Base. No account needed.</div>
+    <div class="product-grid">
+      <a href="/ep" class="product-card"><div class="product-icon">&#x1F6E1;</div><h3>EP AGENTIAM</h3><p>Identity, access, and trust layer for autonomous agents. Policy validation with proof hashes.</p><div class="product-price">$0.01/call</div></a>
+      <a href="/delphi" class="product-card"><div class="product-icon">&#x1F52E;</div><h3>DELPHI</h3><p>Real-time intelligence wire. AI-curated signals across crypto, agents, DeFi, macro.</p><div class="product-price">$0.01/call</div></a>
+      <a href="/noleak" class="product-card"><div class="product-icon">&#x1F512;</div><h3>NOLEAK</h3><p>Execution integrity. Tamper detection and data leak prevention for agent actions.</p><div class="product-price">$0.01/call</div></a>
+      <a href="/memguard" class="product-card"><div class="product-icon">&#x1F9E0;</div><h3>MEMGUARD</h3><p>Memory state verification. Detects drift, corruption, and unauthorized modifications.</p><div class="product-price">$0.01/call</div></a>
+      <a href="/riskoracle" class="product-card"><div class="product-icon">&#x26A0;</div><h3>RISKORACLE</h3><p>Pre-action risk scoring. Multi-factor analysis before any agent execution.</p><div class="product-price">$0.01/call</div></a>
+      <a href="/secureexec" class="product-card"><div class="product-icon">&#x1F510;</div><h3>SECUREEXEC</h3><p>Sandboxed tool execution with cryptographic proof hash generation.</p><div class="product-price">$0.01/call</div></a>
+      <a href="/flowcore" class="product-card"><div class="product-icon">&#x26A1;</div><h3>FLOWCORE</h3><p>Full orchestration pipeline. NoLeak + Risk + Exec + MemGuard in one call.</p><div class="product-price">$0.02/call — best value</div></a>
+      <a href="/strategos" class="product-card" style="position:relative;overflow:visible"><div style="position:absolute;top:-8px;right:-8px;background:#F59E0B;color:#000;font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px;letter-spacing:0.5px">COMING SOON</div><div class="product-icon">&#x1F3DB;</div><h3>STRATEGOS</h3><p>Agent PM layer. PMP-compliant project management for AI agent teams. x402 micropayments on Base.</p><div class="product-price">$0.005–$0.05/call</div></a>
+    </div>
+  </section>
+
+  <!-- EP DEMO -->
+  <section>
+    <div class="section-title">EXECUTION PROTOCOL</div>
+    <div class="section-sub">Pre-execution policy validation for AI agents. The trust layer.</div>
+    <div class="ep-grid">
+      <div>
+        <ul class="ep-pillars">
+          <li><span>&#x1F6E1;</span> <strong>Identity</strong> — ERC-8004 on-chain agent registration</li>
+          <li><span>&#x1F512;</span> <strong>Access</strong> — Policy sets enforced before execution</li>
+          <li><span>&#x1F4DC;</span> <strong>Management</strong> — Tamper-evident cryptographic proof hashes</li>
+          <li><span>&#x2B50;</span> <strong>Reputation</strong> — Talent Protocol operator verification</li>
+          <li><span>&#x1F517;</span> <strong>Delegation</strong> — ERC-7710 scoped wallet limits</li>
+        </ul>
+        <div style="margin-top:20px"><a href="/ep" class="section-link">FULL EP DOCS &#x2192;</a></div>
+      </div>
+      <div class="terminal">
+        <div class="terminal-header">EP LIVE DEMO</div>
+        <input type="text" id="ep-agent-id" placeholder="Enter agent_id (e.g. achilles)" value="achilles">
+        <button onclick="runEpDemo()">VALIDATE &#x2192;</button>
+        <div class="terminal-output" id="ep-output"><span style="color:var(--dim)">// Click VALIDATE to test the live EP endpoint
+// Demo key: ep_demo_synthesis_2026</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OLYMPUS NETWORK -->
+  <section>
+    <div class="section-title">OLYMPUS NETWORK</div>
+    <div class="olympus-hero">
+      <div class="olympus-count" id="olympus-count">0</div>
+      <div class="olympus-label">WARRIORS IN THE ARMY</div>
+    </div>
+    <div class="rank-bars" id="rank-bars">
+      <div class="rank-bar-wrap"><div class="rank-label"><span>RECRUIT</span><span id="rank-recruit">0</span></div><div class="rank-bar"><div class="rank-fill green" id="fill-recruit" style="width:0%"></div></div></div>
+      <div class="rank-bar-wrap"><div class="rank-label"><span>HOPLITE</span><span id="rank-hoplite">0</span></div><div class="rank-bar"><div class="rank-fill green" id="fill-hoplite" style="width:0%"></div></div></div>
+      <div class="rank-bar-wrap"><div class="rank-label"><span>MYRMIDION</span><span id="rank-myrmidion">0</span></div><div class="rank-bar"><div class="rank-fill" id="fill-myrmidion" style="width:0%"></div></div></div>
+      <div class="rank-bar-wrap"><div class="rank-label"><span>SPARTAN</span><span id="rank-spartan">0</span></div><div class="rank-bar"><div class="rank-fill" id="fill-spartan" style="width:0%"></div></div></div>
+      <div class="rank-bar-wrap"><div class="rank-label"><span>OLYMPIAN</span><span id="rank-olympian">0</span></div><div class="rank-bar"><div class="rank-fill" id="fill-olympian" style="width:0%"></div></div></div>
+    </div>
+    <div style="text-align:center">
+      <a href="/olympus" class="btn-primary">VIEW THE ARMY</a>
+    </div>
+  </section>
+
+  <!-- THE ARMORY -->
+  <section>
+    <div class="section-title">THE ARMORY</div>
+    <div class="section-sub">Weapons forged for autonomous warfare.</div>
+    <div class="armory-grid">
+      <div class="armory-card">
+        <h3>PROPINFERA SIEGE REPORT</h3>
+        <p>AI-powered real estate intelligence report. Deep property analysis forged by autonomous reconnaissance.</p>
+        <div class="armory-price">$25</div>
+        <div class="armory-btns">
+          <button class="btn-stripe" onclick="buyWithStripe('propinfera_report',25,'PropInfera Siege Report')">PAY $25</button>
+          <button class="btn-usdc" onclick="payWithCrypto('25')">25 USDC</button>
+        </div>
+      </div>
+      <div class="armory-card">
+        <h3>FORGE YOUR OWN AGENT</h3>
+        <p>Custom autonomous agent deployed into the Olympus Network. Rises through ranks: Recruit to Olympian.</p>
+        <div class="armory-price">$50</div>
+        <div class="armory-btns">
+          <button class="btn-stripe" onclick="buyWithStripe('forge_agent',50,'Forge Your Own Agent')">PAY $50</button>
+          <button class="btn-usdc" onclick="payWithCrypto('50')">50 USDC</button>
+        </div>
+      </div>
+      <div class="armory-card">
+        <h3>WARRIOR SETUP SCRIPT</h3>
+        <p>Full autonomous AI agent stack in one script. OpenClaw + Postgres + Pinecone + trading daemons.</p>
+        <div class="armory-price">$50</div>
+        <div class="armory-btns">
+          <button class="btn-stripe" onclick="buyWithStripe('warrior_script',50,'Warrior Setup Script')">PAY $50</button>
+          <button class="btn-usdc" onclick="payWithCrypto('50')">50 USDC</button>
+        </div>
+      </div>
+      <div class="armory-card">
+        <h3>BATTLE SIGNALS INTEL</h3>
+        <p>Live trade signals from Achilles. Copy trades, market intel, and alpha — delivered daily.</p>
+        <div class="armory-price">$10/mo</div>
+        <div class="armory-btns">
+          <button class="btn-stripe" onclick="buyWithStripe('signals_monthly',10,'Battle Signals Intel')">PAY $10/mo</button>
+          <button class="btn-usdc" onclick="payWithCrypto('10')">10 USDC</button>
+        </div>
+      </div>
+      <div class="armory-card">
+        <h3>WAR COUNCIL BRIEFING</h3>
+        <p>Daily intelligence newsletter. Market analysis, agent economy intel, and strategic briefings.</p>
+        <div class="armory-price">$5/mo</div>
+        <div class="armory-btns">
+          <button class="btn-stripe" onclick="buyWithStripe('briefing_monthly',5,'War Council Briefing')">PAY $5/mo</button>
+          <button class="btn-usdc" onclick="payWithCrypto('5')">5 USDC</button>
+        </div>
+      </div>
+      <div class="armory-card">
+        <h3>EP API ACCESS</h3>
+        <p>Full Execution Protocol API access. Validate agent actions, swarm coordination, proof hashes — production-ready.</p>
+        <div class="armory-price">$29/mo</div>
+        <div class="armory-btns">
+          <button class="btn-stripe" onclick="buyWithStripe('ep_monthly',29,'EP API Access')">PAY $29/mo</button>
+          <button class="btn-usdc" onclick="payWithCrypto('29')">29 USDC</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section>
+    <div class="section-title">HOW IT WORKS</div>
+    <div class="section-sub">Three steps. No accounts. No API keys. Just x402.</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h3>DISCOVER</h3><p>Browse endpoints at <code style="color:var(--gold);font-size:12px">/x402/status</code> or <code style="color:var(--gold);font-size:12px">/.well-known/x402.json</code>. Every service is self-describing.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>PAY</h3><p>Send a POST. Get back HTTP 402 with USDC payment instructions. Sign with your wallet. Automatic via <code style="color:var(--gold);font-size:12px">@x402/fetch</code>.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>EXECUTE</h3><p>Payment verified on-chain. Service executes. Structured JSON response with proof hash. Done.</p></div>
+    </div>
+  </section>
+
+  <!-- FUND THE CAMPAIGN -->
+  <section>
+    <div class="tribute-box">
+      <div class="section-title" style="margin-bottom:16px">FUND THE CAMPAIGN</div>
+      <p style="color:var(--dim);font-size:13px;margin-bottom:16px">Every tribute fuels 24/7 autonomous warfare.</p>
+      <div class="wallet-addr">0x069c6012E053DFBf50390B19FaE275aD96D22ed7</div>
+      <div class="network-badge">BASE NETWORK (USDC)</div>
+      <p style="color:var(--dim);font-size:12px;margin-top:16px">After tribute, contact <a href="https://twitter.com/achillesalphaai" target="_blank" style="color:var(--gold)">@achillesalphaai</a> with tx hash</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <a href="/endpoints" class="btn-primary">VIEW ALL ENDPOINTS</a>
+    <a href="/delphi" class="btn-secondary" style="margin-left:12px">EXPLORE DELPHI</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">ACHILLES</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/strategos">STRATEGOS</a><a href="/docs">DOCS</a><a href="/noleak">NOLEAK</a><a href="/flowcore">FLOWCORE</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a><a href="https://x.com/achillesalphaai" target="_blank">@AchillesAlphaAI</a>
+  </div>
+  <div style="margin-top:8px"><a href="/privacy" style="color:#444;font-size:10px;margin:0 6px">Privacy</a><a href="/terms" style="color:#444;font-size:10px;margin:0 6px">Terms</a></div>
+  <div style="margin-top:8px;color:#1a1a1a">Achilles &middot; Project Olympus &middot; Base Mainnet</div>
+</footer>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+// Constellation particle background
+(function(){
+  const canvas=document.getElementById('heroCanvas');
+  const ctx=canvas.getContext('2d');
+  let w,h,particles=[];
+  function resize(){const hero=document.getElementById('hero');w=canvas.width=hero.offsetWidth;h=canvas.height=hero.offsetHeight}
+  function createParticles(){particles=[];const count=Math.min(Math.floor(w*h/8000),80);for(let i=0;i<count;i++){particles.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.5+.5})}}
+  function draw(){ctx.clearRect(0,0,w,h);for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<140){ctx.beginPath();ctx.strokeStyle=`rgba(245,158,11,${0.08*(1-dist/140)})`;ctx.lineWidth=.5;ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.stroke()}}}for(const p of particles){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>w)p.vx*=-1;if(p.y<0||p.y>h)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(245,158,11,0.5)';ctx.fill()}requestAnimationFrame(draw)}
+  resize();createParticles();draw();window.addEventListener('resize',()=>{resize();createParticles()})
+})();
+
+// Typewriter
+(function(){
+  const phrases=["Autonomous AI Agent","Trades. Validates. Deploys.","Project Olympus","Infrastructure for the Agent Economy","24/7 — No Humans Required"];
+  let pi=0,ci=0,deleting=false;
+  const el=document.getElementById('typewriter');
+  function type(){
+    const phrase=phrases[pi];
+    if(!deleting){el.textContent=phrase.substring(0,ci+1);ci++;if(ci===phrase.length){deleting=true;setTimeout(type,2000);return}}
+    else{el.textContent=phrase.substring(0,ci-1);ci--;if(ci===0){deleting=false;pi=(pi+1)%phrases.length;setTimeout(type,500);return}}
+    setTimeout(type,deleting?40:80)
+  }
+  type()
+})();
+
+// Live stats
+async function loadStats(){
+  try{
+    const[ep,delphi,pnl]=await Promise.all([
+      fetch('/ep/status').then(r=>r.json()).catch(()=>null),
+      fetch('https://delphi-oracle.onrender.com/status',{signal:AbortSignal.timeout(8000)}).then(r=>r.json()).catch(()=>null),
+      fetch('/api/pnl/summary').then(r=>r.json()).catch(()=>null)
+    ]);
+    if(ep){
+      const s=ep.stats||{};
+      animateNum('sEpHits',s.totalValidations||0);
+      const uptimeH=Math.floor((ep.uptime||0)/3600);
+      document.getElementById('sUptime').textContent=uptimeH+'h';
+      document.getElementById('stat-winrate').textContent=s.winRate||'0%';
+      animateNumEl(document.getElementById('stat-trades'),s.totalExecutions||0);
+    }
+    if(delphi){animateNum('sDelphiSignals',delphi.total_signals||0)}
+    if(pnl){
+      if(pnl.total_warriors)animateNumEl(document.getElementById('stat-warriors'),pnl.total_warriors);
+      if(pnl.treasury)document.getElementById('stat-treasury').textContent='$'+pnl.treasury;
+      if(pnl.copy_trades){document.getElementById('pnl-copy-trades').textContent=pnl.copy_trades;document.getElementById('pnl-copy-detail').textContent=pnl.copy_detail||'Hyperliquid'}
+      if(pnl.poly_trades){document.getElementById('pnl-poly-trades').textContent=pnl.poly_trades;document.getElementById('pnl-poly-detail').textContent=pnl.poly_detail||'Polymarket'}
+      // Olympus ranks
+      if(pnl.ranks){
+        const total=Math.max(pnl.total_warriors||1,1);
+        const r=pnl.ranks;
+        ['recruit','hoplite','myrmidion','spartan','olympian'].forEach(rank=>{
+          const el=document.getElementById('rank-'+rank);
+          const fill=document.getElementById('fill-'+rank);
+          if(el&&r[rank]!==undefined){el.textContent=r[rank];fill.style.width=Math.round(r[rank]/total*100)+'%'}
+        });
+        animateNumEl(document.getElementById('olympus-count'),pnl.total_warriors||0);
+      }
+    }
+  }catch(e){}
+}
+function animateNum(id,target){const el=document.getElementById(id);animateNumEl(el,target)}
+function animateNumEl(el,target){
+  if(!el)return;const start=parseInt(el.textContent)||0;if(start===target){el.textContent=target;return}
+  const steps=30,inc=(target-start)/steps;let current=start,step=0;
+  const t=setInterval(()=>{step++;current+=inc;el.textContent=Math.round(current);if(step>=steps){el.textContent=target;clearInterval(t)}},25)
+}
+loadStats();setInterval(loadStats,60000);
+
+// Ticker banner
+function populateTicker(){
+  var items=[
+    '\u2694\uFE0F COPY TRADER: WHALE TRACKING ON HYPERLIQUID',
+    '\uD83C\uDFAF TOKEN SNIPER: SCANNING BASE EVERY 30S',
+    '\uD83D\uDCCA POLYMARKET: POSITIONS ACTIVE',
+    '\uD83D\uDD31 EP VALIDATIONS: LIVE ON BASE MAINNET',
+    '\u26A1 9 x402 ENDPOINTS: PAY-PER-CALL WITH USDC',
+    '\uD83D\uDEE1\uFE0F AGENTIAM: IDENTITY + ACCESS + POLICY + RISK + PROOF',
+    '\uD83D\uDD2E DELPHI: REAL-TIME AI INTELLIGENCE WIRE',
+    '\u2694\uFE0F OLYMPUS NETWORK: WARRIORS DEPLOYED',
+    '\uD83D\uDD12 NOLEAK + MEMGUARD + RISKORACLE + SECUREEXEC + FLOWCORE'
+  ];
+  var html='';
+  for(var r=0;r<2;r++){for(var i=0;i<items.length;i++){html+='<span class="ticker-item">'+items[i]+'</span>'}}
+  document.getElementById('ticker').innerHTML=html;
+}
+populateTicker();
+
+// EP Demo
+async function runEpDemo(){
+  const agentId=document.getElementById('ep-agent-id').value||'achilles';
+  const out=document.getElementById('ep-output');
+  out.innerHTML='<span style="color:var(--gold)">Validating agent: '+agentId+'...</span>';
+  try{
+    const r=await fetch('/ep/validate',{method:'POST',headers:{'Content-Type':'application/json','X-EP-Key':'ep_demo_synthesis_2026'},body:JSON.stringify({agent_id:agentId,action:'demo_validation',asset:'ETH',amount:100})});
+    const d=await r.json();
+    out.innerHTML='<span style="color:var(--green)">'+JSON.stringify(d,null,2)+'</span>';
+  }catch(e){out.innerHTML='<span style="color:var(--red)">Error: '+e.message+'</span>'}
+}
+
+// Stripe Checkout
+const stripeKey='pk_live_51Qxq4KRwBAZ8YGQCV9zMIMKSPl9Q9tLjAIIMd2bfwXQdOKY5WrSQgFwHs1NmH7HCLuLMPnGDxJRvCNi9mFSdVlH00MwLRvN2h';
+async function buyWithStripe(productId,amount,name){
+  try{
+    var r=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productId:productId,amount:amount*100,productName:name})});
+    var d=await r.json();
+    if(d.url) window.location.href=d.url;
+    else if(d.error) alert('Payment error: '+d.error);
+    else alert('Payment setup failed — please try again');
+  }catch(e){alert('Payment error: '+e.message)}
+}
+
+// USDC Payment via Wallet (MetaMask, Coinbase Wallet, etc.)
+var USDC_CONTRACT='0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+var TREASURY='0x069c6012E053DFBf50390B19FaE275aD96D22ed7';
+var BASE_CHAIN_ID='0x2105';
+
+async function payWithCrypto(amount){
+  if(typeof window.ethereum==='undefined'){
+    alert('No crypto wallet detected. Please install MetaMask or Coinbase Wallet to pay with USDC.');
+    return;
+  }
+  try{
+    // Request wallet connection
+    var accounts=await window.ethereum.request({method:'eth_requestAccounts'});
+    if(!accounts||!accounts.length){alert('Wallet connection denied.');return;}
+
+    // Switch to Base network
+    try{
+      await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:BASE_CHAIN_ID}]});
+    }catch(switchErr){
+      if(switchErr.code===4902){
+        await window.ethereum.request({method:'wallet_addEthereumChain',params:[{
+          chainId:BASE_CHAIN_ID,
+          chainName:'Base',
+          nativeCurrency:{name:'ETH',symbol:'ETH',decimals:18},
+          rpcUrls:['https://mainnet.base.org'],
+          blockExplorerUrls:['https://basescan.org']
+        }]});
+      }else{throw switchErr;}
+    }
+
+    // USDC has 6 decimals
+    var usdcAmount=BigInt(Math.round(parseFloat(amount)*1e6));
+    var amountHex='0x'+usdcAmount.toString(16);
+
+    // ERC-20 transfer(address,uint256) = 0xa9059cbb
+    var data='0xa9059cbb'
+      +TREASURY.slice(2).toLowerCase().padStart(64,'0')
+      +usdcAmount.toString(16).padStart(64,'0');
+
+    var txHash=await window.ethereum.request({method:'eth_sendTransaction',params:[{
+      from:accounts[0],
+      to:USDC_CONTRACT,
+      data:data,
+      value:'0x0'
+    }]});
+
+    alert('Payment sent! TX: '+txHash+'\n\nThank you, warrior.');
+  }catch(e){
+    if(e.code===4001){alert('Transaction cancelled.');}
+    else{alert('Payment failed: '+(e.message||e));}
+  }
+}
+</script>
+
+</body>
+</html>

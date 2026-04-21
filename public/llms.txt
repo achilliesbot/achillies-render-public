@@ -1,0 +1,50 @@
+# Achilles EP AgentIAM
+> AI agent execution validation, risk assessment, memory verification, and orchestration services. Pay-per-call via x402 USDC micropayments on Base.
+
+## Base URL
+https://achillesalpha.onrender.com
+
+## Discovery
+- x402 manifest: https://achillesalpha.onrender.com/.well-known/x402.json
+- Agent services: https://achillesalpha.onrender.com/.well-known/agent-services.json
+- Agent identity: https://achillesalpha.onrender.com/.well-known/agent.json
+- MCP manifest: https://achillesalpha.onrender.com/.well-known/mcp.json
+- Status (free): https://achillesalpha.onrender.com/x402/status
+
+## Payment
+- Protocol: x402
+- Network: Base (eip155:8453)
+- Asset: USDC
+- Client: use any x402-compatible client (@x402/fetch, @x402/axios)
+
+## x402 Paid Endpoints
+
+### POST /x402/validate — $0.01
+Full policy validation for agent proposals. Validates action, value, target, and agent context against configurable policy rules. Returns pass/fail with risk score and proof hash.
+
+### POST /x402/risk-check — $0.005
+Quick risk assessment for any agent action. Scores action type, value, and context. Returns risk level (low/medium/high/critical) with numeric score.
+
+### POST /x402/noleak — $0.01
+Execution integrity verification. Detects leaks, prompt injection, and unauthorized data flow in agent execution payloads.
+
+### POST /x402/memguard — $0.01
+Memory state verification. Detects drift, corruption, and unauthorized modifications in agent memory or state snapshots.
+
+### POST /x402/riskoracle — $0.01
+Pre-action risk scoring with multi-factor analysis. Evaluates proposed actions before execution (pre-trade, pre-deploy, pre-transfer).
+
+### POST /x402/secureexec — $0.01
+Sandboxed tool execution security. Validates permissions, enforces sandbox constraints, and generates proof hashes for executed tool calls.
+
+### POST /x402/flowcore — $0.02
+Full orchestration pipeline. Combines NoLeak + RiskOracle + SecureExec + MemGuard in a single call. Highest value per request.
+
+### POST /x402/delphi — $0.01
+DELPHI intelligence signals. Real-time AI ecosystem intel feed. Query by signal type for market, agent, and ecosystem intelligence.
+
+## Request Format
+All endpoints accept JSON POST. Include `agent_id` in the request body for tracking.
+
+## Authentication
+Payment is automatic via x402 protocol. Alternatively, use `Authorization: ApiKey <key>` or `Authorization: Bearer <token>` headers.

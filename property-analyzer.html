@@ -1,0 +1,596 @@
+<!-- Property Analysis Section -->
+<section class="property-analyzer" id="analyzer">
+    <div class="container">
+        <div class="analyzer-header">
+            <h2>🏛️ TRY IT FOR FREE</h2>
+            <p class="subtitle">AI Property Analysis Powered by PropInfera</p>
+        </div>
+        
+        <div class="analyzer-card">
+            <div class="import-tabs">
+                <button class="tab-btn active" data-tab="url">
+                    <span class="tab-icon">🌐</span>
+                    <span class="tab-label">Property URL</span>
+                    <span class="tab-desc">Redfin, Zillow, Realtor.com</span>
+                </button>
+                <button class="tab-btn" data-tab="address">
+                    <span class="tab-icon">🔍</span>
+                    <span class="tab-label">Direct Address</span>
+                    <span class="tab-desc">Any U.S. property address</span>
+                </button>
+            </div>
+            
+            <div class="tab-content" id="url-tab">
+                <div class="input-group">
+                    <input type="url" id="property-url" placeholder="https://www.redfin.com/..." class="property-input">
+                    <button class="analyze-btn" onclick="analyzeProperty()">
+                        <span class="btn-text">Analyze Property</span>
+                        <span class="btn-loading" style="display:none;">⚔️ Analyzing...</span>
+                    </button>
+                </div>
+                <p class="input-hint">Paste a Redfin, Zillow, or Realtor.com listing URL</p>
+            </div>
+            
+            <div class="tab-content" id="address-tab" style="display:none;">
+                <div class="input-group">
+                    <input type="text" id="property-address" placeholder="123 Main St, Austin, TX 78701" class="property-input">
+                    <button class="analyze-btn" onclick="analyzeAddress()">
+                        <span class="btn-text">Analyze Address</span>
+                        <span class="btn-loading" style="display:none;">⚔️ Analyzing...</span>
+                    </button>
+                </div>
+                <p class="input-hint">Enter any U.S. property address</p>
+            </div>
+            
+            <div class="powered-by">
+                <span>Powered by</span>
+                <a href="https://bankr.bot/llm" target="_blank" class="bnkr-link">BNKR LLM</a>
+                <span>+</span>
+                <a href="#products" class="propinfera-link">PropInfera AI</a>
+            </div>
+        </div>
+        
+        <!-- Analysis Results Container -->
+        <div id="analysis-results" class="results-container" style="display:none;">
+            <div class="results-header">
+                <h3>⚔️ BATTLE ASSESSMENT COMPLETE</h3>
+                <p class="results-subtitle">AI-analyzed property intelligence</p>
+            </div>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-icon">🏠</div>
+                    <div class="result-label">Property Value</div>
+                    <div class="result-value" id="result-price">--</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-icon">📊</div>
+                    <div class="result-label">Market Score</div>
+                    <div class="result-value" id="result-score">--</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-icon">💰</div>
+                    <div class="result-label">Rent Estimate</div>
+                    <div class="result-value" id="result-rent">--</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-icon">📈</div>
+                    <div class="result-label">Cash Flow</div>
+                    <div class="result-value" id="result-cashflow">--</div>
+                </div>
+            </div>
+            
+            <div class="analysis-details">
+                <div class="detail-section">
+                    <h4>🎯 Strategic Assessment</h4>
+                    <p id="result-assessment">Analysis loading...</p>
+                </div>
+                
+                <div class="detail-section">
+                    <h4>⚠️ Risk Factors</h4>
+                    <ul id="result-risks">
+                        <li>Analyzing...</li>
+                    </ul>
+                </div>
+                
+                <div class="detail-section">
+                    <h4>🏆 Warrior's Verdict</h4>
+                    <p id="result-verdict">Calculating...</p>
+                </div>
+            </div>
+            
+            <div class="upgrade-cta">
+                <p>Want the full siege report with 50+ comparable properties?</p>
+                <a href="#products" class="btn-primary">Get PropInfera Premium Report — $25</a>
+            </div>
+        </div>
+        
+        <!-- Sample Analysis Preview -->
+        <div class="sample-analysis">
+            <h3>⚔️ SAMPLE BATTLE ASSESSMENT</h3>
+            <div class="sample-card">
+                <div class="sample-property">
+                    <span class="sample-address">Austin, TX Property</span>
+                    <span class="sample-price">$425,000</span>
+                </div>
+                <div class="sample-metrics">
+                    <div class="sample-metric">
+                        <span class="metric-label">AI Score</span>
+                        <span class="metric-value">8.2/10</span>
+                    </div>
+                    <div class="sample-metric">
+                        <span class="metric-label">Cash Flow</span>
+                        <span class="metric-value positive">+$387/mo</span>
+                    </div>
+                    <div class="sample-metric">
+                        <span class="metric-label">Cap Rate</span>
+                        <span class="metric-value">6.8%</span>
+                    </div>
+                </div>
+                <div class="sample-verdict">
+                    <span class="verdict-label">Verdict:</span>
+                    <span class="verdict-text">STRONG BUY — Below market by 12%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .property-analyzer {
+        padding: 80px 0;
+        background: linear-gradient(135deg, rgba(255,107,53,0.05), transparent);
+        border-top: 2px solid var(--flame);
+        border-bottom: 2px solid var(--flame);
+    }
+    
+    .analyzer-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .analyzer-header h2 {
+        font-family: var(--pixel);
+        font-size: 1.5rem;
+        color: var(--gold);
+        margin-bottom: 10px;
+        text-shadow: 0 0 20px var(--flame);
+    }
+    
+    .analyzer-header .subtitle {
+        color: var(--bronze);
+        font-size: 1.1rem;
+    }
+    
+    .analyzer-card {
+        background: rgba(26,15,10,0.9);
+        border: 2px solid var(--flame);
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 700px;
+        margin: 0 auto 50px;
+    }
+    
+    .import-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .tab-btn {
+        background: transparent;
+        border: 2px solid rgba(255,107,53,0.3);
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .tab-btn:hover, .tab-btn.active {
+        border-color: var(--flame);
+        background: rgba(255,107,53,0.1);
+    }
+    
+    .tab-icon {
+        font-size: 1.5rem;
+    }
+    
+    .tab-label {
+        font-family: var(--pixel);
+        font-size: 0.7rem;
+        color: var(--gold);
+    }
+    
+    .tab-desc {
+        font-size: 0.8rem;
+        color: var(--bronze);
+    }
+    
+    .input-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .property-input {
+        flex: 1;
+        background: rgba(0,0,0,0.5);
+        border: 1px solid var(--bronze);
+        padding: 15px;
+        color: var(--gold);
+        font-size: 1rem;
+        font-family: var(--body);
+    }
+    
+    .property-input::placeholder {
+        color: var(--bronze);
+    }
+    
+    .analyze-btn {
+        background: var(--flame);
+        color: var(--darker);
+        border: none;
+        padding: 15px 30px;
+        font-family: var(--pixel);
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        white-space: nowrap;
+    }
+    
+    .analyze-btn:hover {
+        background: var(--gold);
+        box-shadow: 0 0 20px var(--flame);
+    }
+    
+    .input-hint {
+        color: var(--bronze);
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    
+    .powered-by {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(255,107,53,0.2);
+        color: var(--bronze);
+        font-size: 0.85rem;
+    }
+    
+    .powered-by a {
+        color: var(--flame);
+        text-decoration: none;
+        margin: 0 5px;
+    }
+    
+    .powered-by a:hover {
+        color: var(--gold);
+        text-shadow: 0 0 10px var(--flame);
+    }
+    
+    /* Results Section */
+    .results-container {
+        background: rgba(26,15,10,0.95);
+        border: 2px solid var(--gold);
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 800px;
+        margin: 40px auto 0;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .results-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255,107,53,0.2);
+    }
+    
+    .results-header h3 {
+        font-family: var(--pixel);
+        font-size: 1rem;
+        color: var(--gold);
+        margin-bottom: 5px;
+    }
+    
+    .results-subtitle {
+        color: var(--bronze);
+        font-size: 0.9rem;
+    }
+    
+    .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .result-card {
+        background: rgba(0,0,0,0.3);
+        border: 1px solid var(--bronze);
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s;
+    }
+    
+    .result-card:hover {
+        border-color: var(--flame);
+        transform: translateY(-3px);
+    }
+    
+    .result-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    
+    .result-label {
+        font-size: 0.75rem;
+        color: var(--bronze);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+    }
+    
+    .result-value {
+        font-family: var(--pixel);
+        font-size: 1.1rem;
+        color: var(--gold);
+    }
+    
+    .analysis-details {
+        margin: 30px 0;
+    }
+    
+    .detail-section {
+        margin-bottom: 25px;
+        padding: 20px;
+        background: rgba(0,0,0,0.2);
+        border-left: 3px solid var(--flame);
+    }
+    
+    .detail-section h4 {
+        font-family: var(--pixel);
+        font-size: 0.75rem;
+        color: var(--gold);
+        margin-bottom: 10px;
+    }
+    
+    .detail-section p, .detail-section ul {
+        color: var(--bronze);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0;
+    }
+    
+    .detail-section ul {
+        padding-left: 20px;
+    }
+    
+    .detail-section li {
+        margin-bottom: 5px;
+    }
+    
+    .upgrade-cta {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 2px solid var(--flame);
+    }
+    
+    .upgrade-cta p {
+        color: var(--bronze);
+        margin-bottom: 15px;
+    }
+    
+    .btn-primary {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--flame), var(--gold));
+        color: var(--darker);
+        padding: 15px 30px;
+        font-family: var(--pixel);
+        font-size: 0.7rem;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(255,107,53,0.4);
+    }
+    
+    /* Sample Analysis */
+    .sample-analysis {
+        max-width: 700px;
+        margin: 50px auto 0;
+    }
+    
+    .sample-analysis h3 {
+        font-family: var(--pixel);
+        font-size: 0.9rem;
+        color: var(--gold);
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .sample-card {
+        background: rgba(255,107,53,0.05);
+        border: 1px solid rgba(255,107,53,0.3);
+        padding: 25px;
+    }
+    
+    .sample-property {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255,107,53,0.2);
+    }
+    
+    .sample-address {
+        color: var(--bronze);
+        font-size: 0.9rem;
+    }
+    
+    .sample-price {
+        font-family: var(--pixel);
+        font-size: 1.1rem;
+        color: var(--gold);
+    }
+    
+    .sample-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .sample-metric {
+        text-align: center;
+    }
+    
+    .metric-label {
+        display: block;
+        font-size: 0.7rem;
+        color: var(--bronze);
+        text-transform: uppercase;
+        margin-bottom: 3px;
+    }
+    
+    .metric-value {
+        font-family: var(--pixel);
+        font-size: 0.9rem;
+        color: var(--gold);
+    }
+    
+    .metric-value.positive {
+        color: #10b981;
+    }
+    
+    .sample-verdict {
+        text-align: center;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255,107,53,0.2);
+    }
+    
+    .verdict-label {
+        color: var(--bronze);
+        font-size: 0.8rem;
+    }
+    
+    .verdict-text {
+        font-family: var(--pixel);
+        font-size: 0.8rem;
+        color: #10b981;
+    }
+    
+    @media (max-width: 768px) {
+        .import-tabs {
+            grid-template-columns: 1fr;
+        }
+        
+        .input-group {
+            flex-direction: column;
+        }
+        
+        .sample-metrics {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const tab = this.dataset.tab;
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = content.id === tab + '-tab' ? 'block' : 'none';
+            });
+        });
+    });
+    
+    // Mock analysis function (replace with real API call)
+    function analyzeProperty() {
+        const url = document.getElementById('property-url').value;
+        if (!url) {
+            alert('Please enter a property URL');
+            return;
+        }
+        
+        showLoading();
+        
+        // Simulate API call
+        setTimeout(() => {
+            displayResults({
+                price: '$425,000',
+                score: '8.2/10',
+                rent: '$2,850/mo',
+                cashflow: '+$387/mo',
+                assessment: 'This property shows strong fundamentals with below-market pricing. The Austin market has seen 12% YoY appreciation, and this listing is priced 8% under comparable sales in the past 90 days.',
+                risks: ['Moderate flood zone risk', 'HOA fees at $180/mo', 'Built in 1985 - potential maintenance'],
+                verdict: 'STRONG BUY — Target for cash offer at $410K'
+            });
+        }, 2000);
+    }
+    
+    function analyzeAddress() {
+        const address = document.getElementById('property-address').value;
+        if (!address) {
+            alert('Please enter a property address');
+            return;
+        }
+        
+        showLoading();
+        
+        setTimeout(() => {
+            displayResults({
+                price: '$380,000',
+                score: '7.5/10',
+                rent: '$2,400/mo',
+                cashflow: '+$210/mo',
+                assessment: 'Solid B-class property in emerging neighborhood. Recent infrastructure investments suggest appreciation potential over 3-5 year horizon.',
+                risks: ['Higher crime rate than city average', 'School rating 6/10', 'Pending zoning changes'],
+                verdict: 'HOLD — Good for portfolio diversification'
+            });
+        }, 2000);
+    }
+    
+    function showLoading() {
+        document.querySelectorAll('.btn-text').forEach(t => t.style.display = 'none');
+        document.querySelectorAll('.btn-loading').forEach(l => l.style.display = 'inline');
+    }
+    
+    function displayResults(data) {
+        document.querySelectorAll('.btn-text').forEach(t => t.style.display = 'inline');
+        document.querySelectorAll('.btn-loading').forEach(l => l.style.display = 'none');
+        
+        document.getElementById('result-price').textContent = data.price;
+        document.getElementById('result-score').textContent = data.score;
+        document.getElementById('result-rent').textContent = data.rent;
+        document.getElementById('result-cashflow').textContent = data.cashflow;
+        document.getElementById('result-assessment').textContent = data.assessment;
+        document.getElementById('result-verdict').textContent = data.verdict;
+        
+        const risksList = document.getElementById('result-risks');
+        risksList.innerHTML = data.risks.map(r => `<li>${r}</li>`).join('');
+        
+        document.getElementById('analysis-results').style.display = 'block';
+        document.getElementById('analysis-results').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>

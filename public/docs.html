@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achilles Docs — EP AgentIAM API Reference</title>
+<meta name="description" content="Complete API documentation for Achilles EP AgentIAM. x402 payment protocol, endpoint reference, request/response schemas, code examples.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8XZ094X6YT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-8XZ094X6YT');</script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080C08;--card:#0e130e;--card-border:#1a241a;
+    --gold:#F59E0B;--gold-dim:rgba(245,158,11,0.25);--gold-glow:0 0 24px rgba(245,158,11,0.25);
+    --green:#22C55E;--green-dim:rgba(34,197,94,0.25);
+    --red:#EF4444;--blue:#60A5FA;
+    --text:#E5E7EB;--dim:#6B7280;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+  h1,h2,h3{font-family:'Press Start 2P',cursive}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,8,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+  .nav-logo{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);text-decoration:none}
+  .nav-links{display:flex;gap:18px}
+  .nav-links a{color:var(--dim);text-decoration:none;font-size:12px;letter-spacing:.5px;font-weight:500;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .hamburger{display:none;cursor:pointer;color:var(--gold);font-size:22px;background:none;border:none}
+
+  /* LAYOUT */
+  .page{display:flex;margin-top:56px;min-height:calc(100vh - 56px)}
+  .sidebar{width:240px;position:fixed;top:56px;bottom:0;left:0;background:var(--card);border-right:1px solid var(--card-border);overflow-y:auto;padding:20px 0}
+  .sidebar a{display:block;padding:8px 20px;font-size:12px;color:var(--dim);text-decoration:none;transition:all .2s;border-left:2px solid transparent}
+  .sidebar a:hover{color:var(--text);background:rgba(245,158,11,0.04)}
+  .sidebar a.active{color:var(--gold);border-left-color:var(--gold);background:rgba(245,158,11,0.06)}
+  .sidebar .nav-group{padding:14px 20px 6px;font-size:9px;color:var(--gold);letter-spacing:2px;font-family:'Press Start 2P',cursive}
+  .main{margin-left:240px;flex:1;padding:32px 40px 80px;max-width:860px}
+
+  /* CONTENT */
+  .doc-title{font-size:18px;color:var(--gold);letter-spacing:2px;margin-bottom:8px}
+  .doc-sub{font-size:14px;color:var(--dim);margin-bottom:32px;line-height:1.6}
+  .section{margin-bottom:48px;scroll-margin-top:80px}
+  .section h2{font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--card-border)}
+  .section p{font-size:13px;color:#9CA3AF;line-height:1.7;margin-bottom:12px}
+
+  /* ENDPOINT CARD */
+  .endpoint{background:var(--card);border:1px solid var(--card-border);border-radius:10px;margin-bottom:20px;overflow:hidden}
+  .ep-header{padding:16px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--card-border);cursor:pointer}
+  .ep-header:hover{background:rgba(245,158,11,0.03)}
+  .method{font-family:'Press Start 2P',cursive;font-size:8px;padding:4px 8px;border-radius:4px;letter-spacing:.5px}
+  .method.post{background:rgba(245,158,11,0.12);color:var(--gold)}
+  .method.get{background:rgba(34,197,94,0.12);color:var(--green)}
+  .ep-path{font-family:'Courier New',monospace;font-size:14px;color:#fff;flex:1}
+  .ep-price{font-family:'Press Start 2P',cursive;font-size:9px;color:var(--green)}
+  .ep-body{padding:20px;display:none}
+  .ep-body.open{display:block}
+  .ep-desc{font-size:13px;color:#9CA3AF;line-height:1.6;margin-bottom:16px}
+  .ep-label{font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:8px;font-weight:600}
+
+  /* CODE */
+  pre{background:#050805;border:1px solid var(--card-border);border-radius:6px;padding:14px 16px;font-family:'Courier New',monospace;font-size:12px;line-height:1.7;overflow-x:auto;color:#aaa;margin-bottom:12px}
+  pre .kw{color:var(--gold)}
+  pre .str{color:var(--green)}
+  pre .cmt{color:#444}
+  pre .num{color:var(--blue)}
+
+  /* TABLE */
+  .param-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
+  .param-table th{text-align:left;padding:8px 10px;color:var(--gold);font-size:10px;letter-spacing:1px;border-bottom:1px solid var(--card-border);font-weight:600}
+  .param-table td{padding:8px 10px;border-bottom:1px solid rgba(26,36,26,0.5);color:#9CA3AF;vertical-align:top}
+  .param-table td:first-child{color:#fff;font-family:'Courier New',monospace;white-space:nowrap}
+  .param-table .required{color:var(--red);font-size:10px}
+  .param-table .optional{color:var(--dim);font-size:10px}
+
+  /* BADGE */
+  .badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.5px}
+  .badge-paid{background:rgba(245,158,11,0.12);color:var(--gold)}
+  .badge-free{background:rgba(34,197,94,0.12);color:var(--green)}
+  .badge-base{background:rgba(96,165,250,0.12);color:var(--blue)}
+
+  /* QUICK START BOX */
+  .quickstart{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:24px;margin-bottom:24px}
+  .quickstart h3{font-size:10px;color:var(--gold);margin-bottom:12px;letter-spacing:1px}
+  .quickstart p{font-size:13px;color:#9CA3AF;line-height:1.6;margin-bottom:12px}
+
+  /* FOOTER */
+  footer{text-align:center;padding:32px 28px;border-top:1px solid var(--card-border);font-size:11px;color:#333;margin-left:240px}
+  footer a{color:var(--gold);text-decoration:none;margin:0 8px}
+  footer .footer-links{margin-bottom:12px}
+  footer .footer-links a{color:var(--dim);font-size:11px;transition:color .2s}
+  footer .footer-links a:hover{color:var(--gold)}
+
+  /* RESPONSIVE */
+  @media(max-width:900px){
+    .sidebar{display:none}
+    .main{margin-left:0;padding:24px 20px 60px}
+    footer{margin-left:0}
+    .nav-links{display:none}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:52px;right:16px;background:rgba(8,12,8,.97);border:1px solid var(--card-border);border-radius:8px;padding:14px 18px;gap:12px}
+    .hamburger{display:block}
+    .ep-header{flex-wrap:wrap}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">ACHILLES</a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="/">HOME</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/docs" class="active">DOCS</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<div class="sidebar">
+  <div class="nav-group">GETTING STARTED</div>
+  <a href="#overview" class="active">Overview</a>
+  <a href="#quickstart">Quick Start</a>
+  <a href="#authentication">Authentication</a>
+  <a href="#x402">x402 Protocol</a>
+
+  <div class="nav-group">PAID ENDPOINTS</div>
+  <a href="#validate">Validate</a>
+  <a href="#risk-check">Risk Check</a>
+  <a href="#noleak">NoLeak</a>
+  <a href="#memguard">MemGuard</a>
+  <a href="#riskoracle">RiskOracle</a>
+  <a href="#secureexec">SecureExec</a>
+  <a href="#flowcore">FlowCore</a>
+  <a href="#delphi">DELPHI</a>
+  <a href="#research">Research</a>
+
+  <div class="nav-group">RESOURCES</div>
+  <a href="#errors">Errors</a>
+  <a href="#rate-limits">Rate Limits</a>
+  <a href="#sdks">SDKs & Tools</a>
+</div>
+
+<div class="main">
+
+  <h1 class="doc-title">DOCUMENTATION</h1>
+  <p class="doc-sub">Complete API reference for Achilles EP AgentIAM. 9 paid endpoints, x402 micropayments, Base Mainnet USDC.</p>
+
+  <!-- OVERVIEW -->
+  <div class="section" id="overview">
+    <h2>OVERVIEW</h2>
+    <p>Achilles EP AgentIAM is a verification and intelligence infrastructure layer for autonomous AI agents. Every endpoint validates, scores, or verifies agent actions before execution.</p>
+    <p><span class="badge badge-base">BASE MAINNET</span> &nbsp; <span class="badge badge-paid">USDC PAYMENTS</span> &nbsp; <span class="badge badge-free">x402 PROTOCOL</span></p>
+    <div style="margin-top:16px">
+      <p><strong style="color:#fff">Base URL:</strong> <code style="color:var(--gold)">https://achillesalpha.onrender.com</code></p>
+      <p><strong style="color:#fff">Network:</strong> Base Mainnet (eip155:8453)</p>
+      <p><strong style="color:#fff">Currency:</strong> USDC</p>
+      <p><strong style="color:#fff">Pay To:</strong> <code style="color:var(--green);font-size:11px">0x069c6012E053DFBf50390B19FaE275aD96D22ed7</code></p>
+    </div>
+  </div>
+
+  <!-- QUICK START -->
+  <div class="section" id="quickstart">
+    <h2>QUICK START</h2>
+    <div class="quickstart">
+      <h3>1. INSTALL x402 CLIENT</h3>
+      <pre><span class="kw">npm</span> install @x402/fetch</pre>
+    </div>
+    <div class="quickstart">
+      <h3>2. MAKE YOUR FIRST CALL</h3>
+      <pre><span class="kw">import</span> { fetchWithPayment } <span class="kw">from</span> <span class="str">'@x402/fetch'</span>;
+<span class="kw">import</span> { createWalletClient } <span class="kw">from</span> <span class="str">'viem'</span>;
+
+<span class="kw">const</span> wallet = createWalletClient({ <span class="cmt">/* your Base wallet */</span> });
+
+<span class="kw">const</span> result = <span class="kw">await</span> fetchWithPayment(
+  <span class="str">'https://achillesalpha.onrender.com/x402/risk-check'</span>,
+  {
+    method: <span class="str">'POST'</span>,
+    headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+    body: JSON.stringify({
+      action: <span class="str">'trade'</span>,
+      value_usd: <span class="num">500</span>,
+      asset: <span class="str">'ETH'</span>,
+      leverage: <span class="num">2</span>
+    })
+  },
+  { wallet }
+);</pre>
+    </div>
+    <div class="quickstart">
+      <h3>3. THAT'S IT</h3>
+      <p>x402 handles payment automatically. Your agent sends USDC, gets verified data back. No API keys. No accounts. No subscriptions.</p>
+    </div>
+  </div>
+
+  <!-- AUTHENTICATION -->
+  <div class="section" id="authentication">
+    <h2>AUTHENTICATION</h2>
+    <p>EP AgentIAM uses the <strong style="color:#fff">x402 payment protocol</strong> instead of traditional API keys. Every paid request returns HTTP 402 with USDC payment instructions. An x402-compatible client handles payment automatically.</p>
+    <p>No signup. No API keys. No rate limit tiers. You pay per call, and the endpoint responds.</p>
+    <p>For free endpoints, no authentication is required.</p>
+  </div>
+
+  <!-- x402 PROTOCOL -->
+  <div class="section" id="x402">
+    <h2>x402 PROTOCOL</h2>
+    <p>x402 is a machine-to-machine payment standard built on HTTP 402 (Payment Required). When an agent hits a paid endpoint without payment, it receives a 402 response containing payment instructions (amount, recipient, network). The x402 client library completes the USDC transfer on Base and retries the request with a payment proof header.</p>
+    <pre><span class="cmt">// How x402 works under the hood:</span>
+
+<span class="cmt">// 1. Agent sends POST to paid endpoint</span>
+<span class="cmt">// 2. Server returns 402 with payment details:</span>
+{
+  <span class="str">"x402Version"</span>: <span class="num">1</span>,
+  <span class="str">"accepts"</span>: [{
+    <span class="str">"scheme"</span>: <span class="str">"exact"</span>,
+    <span class="str">"network"</span>: <span class="str">"eip155:8453"</span>,
+    <span class="str">"maxAmountRequired"</span>: <span class="str">"10000"</span>,
+    <span class="str">"resource"</span>: <span class="str">"https://achillesalpha.onrender.com/x402/risk-check"</span>,
+    <span class="str">"payTo"</span>: <span class="str">"0x069c6012E053DFBf50390B19FaE275aD96D22ed7"</span>
+  }]
+}
+<span class="cmt">// 3. x402 client signs USDC transfer, attaches proof</span>
+<span class="cmt">// 4. Server validates payment, returns data</span></pre>
+    <p><strong style="color:#fff">Discovery:</strong> <code style="color:var(--gold)">GET /.well-known/x402.json</code> returns the full x402 manifest for automated agent integration.</p>
+  </div>
+
+  <!-- PAID ENDPOINTS -->
+
+  <!-- VALIDATE -->
+  <div class="section" id="validate">
+    <h2>PAID ENDPOINTS</h2>
+
+    <div class="endpoint">
+      <div class="ep-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="method post">POST</span>
+        <span class="ep-path">/x402/validate</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-body">
+        <div class="ep-desc">Full policy validation for agent trade proposals. Checks trade value, leverage, stop-loss placement against policy rules. Returns pass/fail with risk score and cryptographic proof hash.</div>
+        <div class="ep-label">REQUEST BODY</div>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>agent_id</td><td>string <span class="required">required</span></td><td>Your agent identifier</td></tr>
+          <tr><td>asset</td><td>string <span class="optional">optional</span></td><td>Asset symbol (e.g. "ETH", "BTC")</td></tr>
+          <tr><td>direction</td><td>string <span class="optional">optional</span></td><td>"buy" or "sell"</td></tr>
+          <tr><td>amount_usd</td><td>number <span class="optional">optional</span></td><td>Trade value in USD (must be positive)</td></tr>
+          <tr><td>entry_price</td><td>number <span class="optional">optional</span></td><td>Proposed entry price</td></tr>
+          <tr><td>stop_loss</td><td>number <span class="optional">optional</span></td><td>Stop loss price</td></tr>
+          <tr><td>take_profit</td><td>number <span class="optional">optional</span></td><td>Take profit price</td></tr>
+          <tr><td>leverage</td><td>number <span class="optional">optional</span></td><td>Leverage multiplier (max 3x policy)</td></tr>
+          <tr><td>proposal_id</td><td>string <span class="optional">optional</span></td><td>Your internal proposal ID</td></tr>
+        </table>
+        <div class="ep-label">RESPONSE</div>
+        <pre>{
+  <span class="str">"valid"</span>: <span class="kw">true</span>,
+  <span class="str">"risk_score"</span>: <span class="str">"LOW"</span>,
+  <span class="str">"violations"</span>: [],
+  <span class="str">"proof_hash"</span>: <span class="str">"a1b2c3..."</span>,
+  <span class="str">"plan_summary"</span>: <span class="str">"AGENT:my-bot | ETH BUY $50"</span>,
+  <span class="str">"policy_set_id"</span>: <span class="str">"olympus-v1"</span>,
+  <span class="str">"chain"</span>: <span class="str">"base"</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-04-10T..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISK CHECK -->
+  <div class="section" id="risk-check">
+    <div class="endpoint">
+      <div class="ep-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="method post">POST</span>
+        <span class="ep-path">/x402/risk-check</span>
+        <span class="ep-price">$0.005</span>
+      </div>
+      <div class="ep-body">
+        <div class="ep-desc">Quick pre-action risk assessment. Scores any agent action on a 0-100 scale across value, leverage, and action type. Returns risk level (LOW/MEDIUM/HIGH/CRITICAL) with recommendation.</div>
+        <div class="ep-label">REQUEST BODY</div>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>action</td><td>string <span class="required">required</span></td><td>Action type: "trade", "swap", "bridge", "borrow", "transfer", etc.</td></tr>
+          <tr><td>value_usd</td><td>number <span class="required">required</span></td><td>Dollar value of the action</td></tr>
+          <tr><td>asset</td><td>string <span class="optional">optional</span></td><td>Asset involved</td></tr>
+          <tr><td>leverage</td><td>number <span class="optional">optional</span></td><td>Leverage multiplier (default 1)</td></tr>
+          <tr><td>context</td><td>string <span class="optional">optional</span></td><td>Additional context for scoring</td></tr>
+        </table>
+        <div class="ep-label">RESPONSE</div>
+        <pre>{
+  <span class="str">"risk_level"</span>: <span class="str">"MEDIUM"</span>,
+  <span class="str">"risk_score"</span>: <span class="num">35</span>,
+  <span class="str">"max_score"</span>: <span class="num">100</span>,
+  <span class="str">"flags"</span>: [<span class="str">"MEDIUM_VALUE"</span>, <span class="str">"STANDARD_ACTION"</span>],
+  <span class="str">"recommendation"</span>: <span class="str">"Acceptable. Ensure proper sizing."</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-04-10T..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOLEAK -->
+  <div class="section" id="noleak">
+    <div class="endpoint">
+      <div class="ep-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="method post">POST</span>
+        <span class="ep-path">/x402/noleak</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-body">
+        <div class="ep-desc">Execution integrity check. Detects tampered execution environments, leaked credentials, and unauthorized data exfiltration. Verifies your agent's runtime hasn't been compromised.</div>
+        <div class="ep-label">REQUEST BODY</div>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>agent_id</td><td>string <span class="required">required</span></td><td>Your agent identifier</td></tr>
+          <tr><td>execution_hash</td><td>string <span class="optional">optional</span></td><td>Hash of current execution state</td></tr>
+          <tr><td>environment</td><td>object <span class="optional">optional</span></td><td>Runtime environment metadata</td></tr>
+        </table>
+        <div class="ep-label">RESPONSE</div>
+        <pre>{
+  <span class="str">"status"</span>: <span class="str">"clean"</span>,
+  <span class="str">"leak_detected"</span>: <span class="kw">false</span>,
+  <span class="str">"tamper_detected"</span>: <span class="kw">false</span>,
+  <span class="str">"integrity_score"</span>: <span class="num">1.0</span>,
+  <span class="str">"proof_hash"</span>: <span class="str">"d4e5f6..."</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-04-10T..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEMGUARD -->
+  <div class="section" id="memguard">
+    <div class="endpoint">
+      <div class="ep-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="method post">POST</span>
+        <span class="ep-path">/x402/memguard</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-body">
+        <div class="ep-desc">Memory state verification. Compares current memory against baseline snapshots. Detects drift, corruption, truncation, and unauthorized modifications to your agent's memory.</div>
+        <div class="ep-label">REQUEST BODY</div>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>agent_id</td><td>string <span class="required">required</span></td><td>Your agent identifier</td></tr>
+          <tr><td>memory_hash</td><td>string <span class="optional">optional</span></td><td>Hash of current memory state</td></tr>
+          <tr><td>expected_state</td><td>string <span class="optional">optional</span></td><td>Expected operational state</td></tr>
+        </table>
+        <div class="ep-label">RESPONSE</div>
+        <pre>{
+  <span class="str">"status"</span>: <span class="str">"verified"</span>,
+  <span class="str">"drift_detected"</span>: <span class="kw">false</span>,
+  <span class="str">"corruption_detected"</span>: <span class="kw">false</span>,
+  <span class="str">"unauthorized_mod"</span>: <span class="kw">false</span>,
+  <span class="str">"integrity_score"</span>: <span class="num">1.0</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-04-10T..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISKORACLE -->
+  <div class="section" id="riskoracle">
+    <div class="endpoint">
+      <div class="ep-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="method post">POST</span>
+        <span class="ep-path">/x402/riskoracle</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-body">
+        <div class="ep-desc">Multi-factor pre-action risk scoring. Evaluates leverage risk, exposure analysis, and market conditions before your agent executes. Returns a 0-10 risk score with detailed breakdown.</div>
+        <div class="ep-label">REQUEST BODY</div>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>agent_id</td><td>string <span class="required">required</span></td><td>Your agent identifier</td></tr>
+          <tr><td>action</td><td>string <span class="optional">optional</span></td><td>Proposed action description</td></tr>
+          <tr><td>value_usd</td><td>number <span class="optional">optional</span></td><td>Dollar value at risk</td></tr>
+          <tr><td>leverage</td><td>number <span class="optional">optional</span></td><td>Leverage multiplier</td></tr>
+          <tr><td>asset</td><td>string <span class="optional">optional</span></td><td>Asset involved</td></tr>
+        </table>
+        <div class="ep-label">RESPONSE</div>
+        <pre>{
+  <span class="str">"risk_score"</span>: <span class="num">3.2</span>,
+  <span class="str">"risk_level"</span>: <span class="str">"MEDIUM"</span>,
+  <span class="str">"factors"</span>: {
+    <span class="str">"leverage_risk"</span>: <span class="num">2.1</span>,
+    <span class="str">"exposure_risk"</span>: <span class="num">4.0</span>,
+    <span class="str">"market_risk"</span>: <span class="num">3.5</span>
+  },
+  <span class="str">"recommendation"</span>: <span class="str">"Proceed with caution"</span>,
+  <span class="str">"proof_hash"</span>: <span class="str">"g7h8i9..."</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-04-10T..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECUREEXEC -->
+  <div class="section" id="secureexec">
+    <div class="endpoint">
+      <div class="ep-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="method post">POST</span>
+        <span class="ep-path">/x402/secureexec</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-body">
+        <div class="ep-desc">Sandboxed tool execution with security verification. Ensures only approved tools execute within authorized parameters. Returns execution proof hash for audit trail.</div>
+        <div class="ep-label">REQUEST BODY</div>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>agent_id</td><td>string <span class="required">required</span></td><td>Your agent identifier</td></tr>
+          <tr><td>tool</td><td>string <span class="optional">optional</span></td><td>Tool to execute</td></tr>
+          <tr><td>params</td><td>object <span class="optional">optional</span></td><td>Execution parameters</td></tr>
+          <tr><td>sandbox</td><td>boolean <span class="optional">optional</span></td><td>Force sandboxed execution (default true)</td></tr>
+        </table>
+        <div class="ep-label">RESPONSE</div>
+        <pre>{
+  <span class="str">"status"</span>: <span class="str">"executed"</span>,
+  <span class="str">"tool"</span>: <span class="str">"trade_executor"</span>,
+  <span class="str">"sandboxed"</span>: <span class="kw">true</span>,
+  <span class="str">"result"</span>: { <span class="cmt">/* tool output */</span> },
+  <span class="str">"proof_hash"</span>: <span class="str">"j1k2l3..."</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-04-10T..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOWCORE -->
+  <div class="section" id="flowcore">
+    <div class="endpoint">
+      <div class="ep-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="method post">POST</span>
+        <span class="ep-path">/x402/flowcore</span>
+        <span class="ep-price">$0.02</span>
+      </div>
+      <div class="ep-body">
+        <div class="ep-desc">Full orchestration pipeline. Runs NoLeak + RiskOracle + SecureExec + MemGuard in sequence. One call verifies your entire agent action pipeline. Highest value per call.</div>
+        <div class="ep-label">REQUEST BODY</div>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>agent_id</td><td>string <span class="required">required</span></td><td>Your agent identifier</td></tr>
+          <tr><td>flow</td><td>object <span class="optional">optional</span></td><td>Flow configuration (steps, params)</td></tr>
+          <tr><td>action</td><td>string <span class="optional">optional</span></td><td>Action to verify through full pipeline</td></tr>
+        </table>
+        <div class="ep-label">RESPONSE</div>
+        <pre>{
+  <span class="str">"result"</span>: <span class="str">"verified"</span>,
+  <span class="str">"steps_completed"</span>: <span class="num">4</span>,
+  <span class="str">"pipeline"</span>: {
+    <span class="str">"noleak"</span>: <span class="str">"pass"</span>,
+    <span class="str">"riskoracle"</span>: <span class="str">"pass"</span>,
+    <span class="str">"secureexec"</span>: <span class="str">"pass"</span>,
+    <span class="str">"memguard"</span>: <span class="str">"pass"</span>
+  },
+  <span class="str">"proof_hash"</span>: <span class="str">"m4n5o6..."</span>,
+  <span class="str">"total_cost"</span>: <span class="str">"$0.02"</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-04-10T..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELPHI -->
+  <div class="section" id="delphi">
+    <div class="endpoint">
+      <div class="ep-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="method post">POST</span>
+        <span class="ep-path">/x402/delphi</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-body">
+        <div class="ep-desc">DELPHI intelligence signals. Query real-time AI-curated intel across crypto, AI agents, DeFi, and macro. Filter by signal type and severity. Returns structured signal data.</div>
+        <div class="ep-label">REQUEST BODY</div>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>type</td><td>string <span class="optional">optional</span></td><td>Signal type filter (e.g. "security/exploit", "market/price")</td></tr>
+          <tr><td>severity</td><td>string <span class="optional">optional</span></td><td>Severity filter: critical, high, medium, low, info</td></tr>
+          <tr><td>limit</td><td>number <span class="optional">optional</span></td><td>Max signals to return (default 20)</td></tr>
+          <tr><td>since</td><td>string <span class="optional">optional</span></td><td>ISO timestamp — only signals after this time</td></tr>
+          <tr><td>agent_id</td><td>string <span class="optional">optional</span></td><td>Your agent identifier for tracking</td></tr>
+        </table>
+        <div class="ep-label">SIGNAL TYPES</div>
+        <pre><span class="cmt">// Available signal types:</span>
+security/exploit    security/vulnerability    security/rugpull
+market/yield        market/price              market/liquidity    market/launch
+ecosystem/new-agent ecosystem/new-service     ecosystem/funding
+api-health/down     api-health/degraded       api-health/recovered
+intelligence/research intelligence/trend      intelligence/opportunity</pre>
+        <div class="ep-label">RESPONSE</div>
+        <pre>{
+  <span class="str">"signals"</span>: [
+    {
+      <span class="str">"id"</span>: <span class="str">"sig_abc123"</span>,
+      <span class="str">"type"</span>: <span class="str">"market/price"</span>,
+      <span class="str">"severity"</span>: <span class="str">"high"</span>,
+      <span class="str">"title"</span>: <span class="str">"ETH breaks $4200 resistance"</span>,
+      <span class="str">"confidence"</span>: <span class="num">0.91</span>,
+      <span class="str">"source"</span>: <span class="str">"delphi-oracle"</span>,
+      <span class="str">"created_at"</span>: <span class="str">"2026-04-10T..."</span>
+    }
+  ],
+  <span class="str">"count"</span>: <span class="num">1</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-04-10T..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESEARCH -->
+  <div class="section" id="research">
+    <div class="endpoint">
+      <div class="ep-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="method post">POST</span>
+        <span class="ep-path">/api/v1/research</span>
+        <span class="ep-price">$0.05</span>
+      </div>
+      <div class="ep-body">
+        <div class="ep-desc">AI-synthesized intelligence brief on any topic. Searches multiple sources, deduplicates findings, and returns a structured research report with key findings and sources.</div>
+        <div class="ep-label">REQUEST BODY</div>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td>topic</td><td>string <span class="required">required</span></td><td>Research topic (e.g. "Base network agent security")</td></tr>
+          <tr><td>depth</td><td>string <span class="optional">optional</span></td><td>Research depth: "quick" or "deep"</td></tr>
+          <tr><td>agent_id</td><td>string <span class="optional">optional</span></td><td>Your agent identifier</td></tr>
+        </table>
+        <div class="ep-label">RESPONSE</div>
+        <pre>{
+  <span class="str">"topic"</span>: <span class="str">"Base network agent security"</span>,
+  <span class="str">"summary"</span>: <span class="str">"Research brief: 3 key findings from 8 sources."</span>,
+  <span class="str">"key_findings"</span>: [
+    <span class="str">"Finding 1..."</span>,
+    <span class="str">"Finding 2..."</span>,
+    <span class="str">"Finding 3..."</span>
+  ],
+  <span class="str">"sources"</span>: [
+    { <span class="str">"title"</span>: <span class="str">"Source Title"</span>, <span class="str">"url"</span>: <span class="str">"https://..."</span> }
+  ],
+  <span class="str">"result_count"</span>: <span class="num">8</span>,
+  <span class="str">"generated_at"</span>: <span class="str">"2026-04-10T..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERRORS -->
+  <div class="section" id="errors">
+    <h2>ERRORS</h2>
+    <table class="param-table">
+      <tr><th>Code</th><th>Meaning</th><th>Action</th></tr>
+      <tr><td>400</td><td>Bad Request — missing required fields</td><td>Check request body</td></tr>
+      <tr><td>402</td><td>Payment Required — x402 payment needed</td><td>Use @x402/fetch for auto-payment</td></tr>
+      <tr><td>500</td><td>Internal Server Error</td><td>Retry after 5 seconds</td></tr>
+      <tr><td>502</td><td>Service Unreachable — backend service down</td><td>Retry after 30 seconds (cold start)</td></tr>
+    </table>
+  </div>
+
+  <!-- RATE LIMITS -->
+  <div class="section" id="rate-limits">
+    <h2>RATE LIMITS</h2>
+    <p>No rate limits. Every request is paid via x402 — the payment itself is the rate limiter. You can make as many calls as your agent needs.</p>
+  </div>
+
+  <!-- SDKs -->
+  <div class="section" id="sdks">
+    <h2>SDKs & TOOLS</h2>
+    <table class="param-table">
+      <tr><th>Package</th><th>Language</th><th>Purpose</th></tr>
+      <tr><td><a href="https://www.npmjs.com/package/@x402/fetch" target="_blank" style="color:var(--gold);text-decoration:none">@x402/fetch</a></td><td>JavaScript/TypeScript</td><td>Drop-in fetch replacement with auto x402 payment</td></tr>
+      <tr><td><a href="https://www.npmjs.com/package/@x402/axios" target="_blank" style="color:var(--gold);text-decoration:none">@x402/axios</a></td><td>JavaScript/TypeScript</td><td>Axios interceptor for x402 payment</td></tr>
+      <tr><td><a href="https://www.npmjs.com/package/viem" target="_blank" style="color:var(--gold);text-decoration:none">viem</a></td><td>JavaScript/TypeScript</td><td>Wallet client for signing USDC transactions on Base</td></tr>
+    </table>
+    <pre><span class="cmt"># Install everything you need</span>
+<span class="kw">npm</span> install @x402/fetch viem</pre>
+    <p style="margin-top:16px"><strong style="color:#fff">More resources:</strong></p>
+    <p><a href="https://www.x402.org" target="_blank" style="color:var(--gold)">x402.org</a> — x402 protocol specification and documentation</p>
+    <p><a href="https://docs.base.org" target="_blank" style="color:var(--gold)">Base Docs</a> — Base network developer documentation</p>
+    <p><a href="https://basescan.org/address/0x069c6012E053DFBf50390B19FaE275aD96D22ed7" target="_blank" style="color:var(--gold)">BaseScan</a> — View treasury wallet and on-chain transactions</p>
+  </div>
+
+</div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">HOME</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/docs">DOCS</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a>
+  </div>
+  <p>ACHILLES &mdash; Project Olympus &mdash; <a href="https://twitter.com/AchillesAlphaAI" target="_blank">@AchillesAlphaAI</a></p>
+</footer>
+
+<script>
+// Sidebar active state on scroll
+var sections=document.querySelectorAll('.section[id]');
+var sideLinks=document.querySelectorAll('.sidebar a');
+window.addEventListener('scroll',function(){
+  var current='';
+  sections.forEach(function(s){
+    if(window.scrollY>=s.offsetTop-100) current=s.getAttribute('id');
+  });
+  sideLinks.forEach(function(a){
+    a.classList.remove('active');
+    if(a.getAttribute('href')==='#'+current) a.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

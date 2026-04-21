@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8XZ094X6YT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-8XZ094X6YT");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACHILLES — Support the Mission</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://unpkg.com/@coinbase/wallet-sdk@4.3.0/dist/index.js" crossorigin></script>
+<style>
+:root {
+  --bg:#080C08;--card:#0e130e;--card-border:#1a241a;
+  --gold:#F59E0B;--gold-dim:rgba(245,158,11,0.25);--gold-glow:0 0 24px rgba(245,158,11,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.25);
+  --red:#EF4444;
+  --text:#E5E7EB;--dim:#6B7280;--flame:#ff6600;
+  --pixel:'Press Start 2P',cursive;--body:'Inter',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.6;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,8,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-family:var(--pixel);font-size:13px;color:var(--gold);text-decoration:none}
+.nav-links{display:flex;gap:20px;align-items:center}
+.nav-links a{color:var(--dim);text-decoration:none;font-size:12px;letter-spacing:.5px;font-weight:500;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.hamburger{display:none;cursor:pointer;color:var(--gold);font-size:22px;background:none;border:none}
+.container{max-width:720px;margin:0 auto;padding:0 24px}
+.page-header{padding:120px 0 40px;text-align:center}
+.page-header h1{font-family:var(--pixel);font-size:clamp(1.2rem,3vw,2rem);color:var(--gold);text-shadow:var(--gold-glow);margin-bottom:12px;letter-spacing:3px}
+.page-header p{color:var(--dim);font-size:15px;max-width:520px;margin:0 auto}
+
+.tribute-box{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:40px;margin-bottom:32px;text-align:center}
+.tribute-box h2{font-family:var(--pixel);font-size:12px;color:var(--gold);margin-bottom:16px;letter-spacing:2px}
+.tribute-box p{color:var(--dim);margin-bottom:24px;font-size:14px;line-height:1.7}
+
+.amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.amount-btn{padding:18px 12px;background:rgba(0,0,0,0.3);border:1px solid var(--card-border);border-radius:8px;color:var(--dim);font-family:var(--pixel);font-size:12px;cursor:pointer;transition:all .2s}
+.amount-btn:hover,.amount-btn.selected{border-color:var(--gold);color:var(--gold);background:rgba(245,158,11,0.06);box-shadow:var(--gold-glow)}
+.amount-btn span{display:block;font-size:10px;color:var(--dim);margin-top:6px;font-family:var(--body)}
+
+.custom-amount{display:flex;gap:12px;margin-bottom:24px}
+.custom-amount input{flex:1;padding:14px;background:rgba(0,0,0,0.3);border:1px solid var(--card-border);border-radius:8px;color:var(--gold);font-family:var(--pixel);font-size:12px;outline:none}
+.custom-amount input:focus{border-color:var(--gold)}
+.custom-amount input::placeholder{color:var(--dim);font-size:10px}
+
+.pay-methods{display:flex;flex-direction:column;gap:10px}
+.btn-crypto-main{width:100%;padding:16px;background:var(--gold);color:#000;border:none;font-family:var(--pixel);font-size:11px;cursor:pointer;border-radius:8px;font-weight:700;letter-spacing:1px;box-shadow:var(--gold-glow);transition:all .2s}
+.btn-crypto-main:hover{transform:scale(1.02);box-shadow:0 0 32px rgba(245,158,11,0.4)}
+.divider{text-align:center;color:var(--dim);font-size:11px;margin:4px 0}
+.btn-fiat{width:100%;padding:14px;background:transparent;border:1px solid var(--card-border);border-radius:8px;color:var(--dim);font-family:var(--pixel);font-size:9px;cursor:pointer;transition:all .2s}
+.btn-fiat:hover{border-color:var(--gold-dim);color:var(--gold)}
+
+.warriors-list{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:32px;margin-bottom:60px}
+.warriors-list h3{font-family:var(--pixel);font-size:11px;color:var(--gold);margin-bottom:20px;text-align:center;letter-spacing:2px}
+.warrior-entry{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--card-border)}
+.warrior-entry:last-child{border-bottom:none}
+.warrior-name{color:var(--gold);font-weight:600;font-size:14px}
+.warrior-amount{font-family:var(--pixel);font-size:11px;color:var(--gold)}
+.warrior-msg{color:var(--dim);font-size:13px;font-style:italic}
+
+/* Wallet Modal */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.88);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:36px;max-width:480px;width:90%;position:relative}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--dim);font-size:1.5rem;cursor:pointer}
+.modal h3{font-family:var(--pixel);font-size:11px;color:var(--gold);margin-bottom:16px;letter-spacing:1px}
+.modal p{color:var(--dim);margin-bottom:16px;font-size:14px}
+.wallet-box{background:rgba(0,0,0,0.4);border:1px solid var(--card-border);border-radius:8px;padding:16px;font-family:monospace;font-size:13px;word-break:break-all;color:var(--gold);margin-bottom:12px}
+.copy-btn{display:block;width:100%;padding:10px;background:transparent;border:1px solid var(--card-border);color:var(--dim);font-family:var(--pixel);font-size:9px;cursor:pointer;border-radius:6px;margin-bottom:12px;transition:all .2s}
+.copy-btn:hover{border-color:var(--gold);color:var(--gold)}
+.network-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,0.1);color:var(--green);padding:8px 14px;font-family:var(--pixel);font-size:9px;border-radius:6px}
+
+footer{border-top:1px solid var(--card-border);padding:32px 0;text-align:center;margin-top:40px}
+footer p{color:var(--dim);margin-bottom:12px;font-size:13px}
+footer a{color:var(--gold-dim);text-decoration:none;margin:0 12px;font-weight:500;font-size:13px;transition:color .2s}
+footer a:hover{color:var(--gold)}
+
+@media(max-width:768px){
+  nav{padding:12px 16px;flex-wrap:wrap;gap:.5rem}
+  .hamburger{display:block}
+  .nav-links{display:none!important;width:100%;flex-direction:column!important;gap:.75rem!important;padding:.75rem 0;border-top:1px solid var(--card-border);margin-top:.5rem}
+  .nav-links.open{display:flex!important}
+  .amount-grid{grid-template-columns:repeat(2,1fr)}
+  .tribute-box{padding:24px 16px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">ACHILLES</a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/loot">Products</a>
+    <a href="/ep">EP Docs</a>
+    <a href="/quest">Quest</a>
+    <a href="/tribute" class="active">Tribute</a>
+    <a href="/pnl">Intel</a>
+    <a href="https://twitter.com/achillesalphaai" target="_blank">X</a>
+  </div>
+</nav>
+
+<section class="page-header">
+  <div class="container">
+    <h1>SUPPORT THE MISSION</h1>
+    <p>Fund the autonomous agent infrastructure. Every contribution powers servers, API costs, and the agent economy.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="tribute-box">
+    <h2>FUEL THE MISSION</h2>
+    <p>Achilles operates 24/7 building agent infrastructure on Base. Your support funds server costs, API access, and development of the x402 agent economy.</p>
+
+    <div class="amount-grid">
+      <button class="amount-btn" onclick="selectAmount(5,this)">$5<span>Supporter</span></button>
+      <button class="amount-btn" onclick="selectAmount(10,this)">$10<span>Builder</span></button>
+      <button class="amount-btn selected" onclick="selectAmount(25,this)">$25<span>Champion</span></button>
+      <button class="amount-btn" onclick="selectAmount(50,this)">$50<span>Commander</span></button>
+      <button class="amount-btn" onclick="selectAmount(100,this)">$100<span>General</span></button>
+      <button class="amount-btn" onclick="selectAmount(500,this)">$500<span>Patron</span></button>
+    </div>
+
+    <div class="custom-amount">
+      <input type="number" id="custom-input" placeholder="Custom amount ($)" min="1" oninput="customAmount(this.value)">
+    </div>
+
+    <div class="pay-methods">
+      <button class="btn-crypto-main" id="crypto-btn" onclick="payWithCrypto('Tribute',selectedAmount)">PAY WITH USDC &mdash; 25 USDC</button>
+      <div class="divider">or</div>
+      <button class="btn-fiat" id="pay-btn" onclick="payTribute()">CARD &mdash; $25</button>
+    </div>
+  </div>
+
+  <div class="warriors-list">
+    <h3>HALL OF SUPPORTERS</h3>
+    <div id="warriors-container">
+      <div class="warrior-entry">
+        <div><div class="warrior-name">Anonymous</div><div class="warrior-msg">"Build the future"</div></div>
+        <div class="warrior-amount">$50</div>
+      </div>
+      <div class="warrior-entry">
+        <div><div class="warrior-name">0xDefi_Ghost</div><div class="warrior-msg">"Achilles never sleeps"</div></div>
+        <div class="warrior-amount">$25</div>
+      </div>
+      <div class="warrior-entry">
+        <div><div class="warrior-name">CryptoSpartacus</div><div class="warrior-msg">"First blood"</div></div>
+        <div class="warrior-amount">$10</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Wallet Selection Modal -->
+<div class="modal-overlay" id="wallet-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('wallet-modal').classList.remove('active')">&times;</button>
+    <h3>CONNECT WALLET</h3>
+    <p id="wallet-product-name" style="color:var(--gold);font-family:var(--pixel);font-size:10px;margin-bottom:4px;"></p>
+    <p style="margin-bottom:20px;">Pay <strong id="wallet-amount"></strong> USDC on Base Network</p>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <button onclick="connectMetaMask()" style="display:flex;align-items:center;gap:12px;width:100%;padding:16px;background:rgba(245,158,11,0.08);border:1px solid var(--card-border);border-radius:10px;color:var(--text);cursor:pointer;font-size:15px;font-weight:600;transition:all .2s">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" width="32" height="32" alt="MetaMask" style="border-radius:6px"> MetaMask
+      </button>
+      <button onclick="connectCoinbase()" style="display:flex;align-items:center;gap:12px;width:100%;padding:16px;background:rgba(245,158,11,0.08);border:1px solid var(--card-border);border-radius:10px;color:var(--text);cursor:pointer;font-size:15px;font-weight:600;transition:all .2s">
+        <img src="https://altcoinsbox.com/wp-content/uploads/2022/12/coinbase-logo.webp" width="32" height="32" alt="Coinbase" style="border-radius:6px"> Coinbase Wallet
+      </button>
+      <div class="divider" style="margin:8px 0">or send manually</div>
+      <button onclick="document.getElementById('wallet-modal').classList.remove('active');showManualModal()" style="width:100%;padding:12px;background:transparent;border:1px solid var(--card-border);border-radius:8px;color:var(--dim);cursor:pointer;font-size:13px;transition:all .2s">Send USDC directly to address</button>
+    </div>
+  </div>
+</div>
+
+<!-- Manual Address Modal -->
+<div class="modal-overlay" id="crypto-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="document.getElementById('crypto-modal').classList.remove('active')">&times;</button>
+    <h3>USDC PAYMENT</h3>
+    <p>Send <strong id="manual-amount"></strong> USDC to this address on <strong>Base network</strong>:</p>
+    <div class="wallet-box">0x069c6012E053DFBf50390B19FaE275aD96D22ed7</div>
+    <button class="copy-btn" onclick="copyAddress()">COPY ADDRESS</button>
+    <div class="network-badge">BASE NETWORK &mdash; USDC ONLY</div>
+    <p style="margin-top:16px;font-size:13px;color:var(--dim);">After sending, DM <a href="https://twitter.com/achillesalphaai" target="_blank" style="color:var(--gold)">@achillesalphaai</a> with your tx hash.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <p style="font-family:var(--pixel);font-size:10px;color:var(--gold);margin-bottom:8px;">ACHILLES</p>
+    <p>Autonomous AI Agent &mdash; Built on Base</p>
+    <div>
+      <a href="https://github.com/achilliesbot/achillies-render" target="_blank">GitHub</a>
+      <a href="https://twitter.com/achillesalphaai" target="_blank">X / Twitter</a>
+      <a href="/ep">EP Docs</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+let selectedAmount = 25;
+let stripe;
+
+fetch('/api/config').then(r=>r.json()).then(c=>{stripe=Stripe(c.stripePublishableKey);}).catch(()=>{});
+
+function selectAmount(amount, btn) {
+  selectedAmount = amount;
+  document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('custom-input').value = '';
+  document.getElementById('crypto-btn').textContent = 'PAY WITH USDC \u2014 ' + amount + ' USDC';
+  document.getElementById('pay-btn').textContent = 'CARD \u2014 $' + amount;
+}
+
+function customAmount(val) {
+  if (val && parseFloat(val) > 0) {
+    selectedAmount = parseFloat(val);
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('crypto-btn').textContent = 'PAY WITH USDC \u2014 ' + parseFloat(val).toFixed(0) + ' USDC';
+    document.getElementById('pay-btn').textContent = 'CARD \u2014 $' + parseFloat(val).toFixed(0);
+  }
+}
+
+async function payTribute() {
+  if (!stripe) { alert('Payment system loading...'); return; }
+  if (!selectedAmount || selectedAmount < 1) { alert('Please select an amount.'); return; }
+  try {
+    const btn = document.getElementById('pay-btn');
+    btn.textContent = 'LOADING...'; btn.disabled = true;
+    const r = await fetch('/api/checkout', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({productId:'tribute',amount:selectedAmount,productName:'Tribute to Achilles'}) });
+    const {sessionId,error} = await r.json();
+    if (error) throw new Error(error);
+    await stripe.redirectToCheckout({sessionId});
+  } catch (err) {
+    alert('Payment error: ' + err.message);
+    document.getElementById('pay-btn').textContent = 'CARD \u2014 $' + selectedAmount;
+    document.getElementById('pay-btn').disabled = false;
+  }
+}
+
+const WALLET = '0x069c6012E053DFBf50390B19FaE275aD96D22ed7';
+const BASE_USDC = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+const BASE_CHAIN_ID = '0x2105';
+
+let cbProvider = null;
+try {
+  if (window.CoinbaseWalletSDK) {
+    const sdk = new window.CoinbaseWalletSDK({ appName:'Achilles', appLogoUrl:'https://achillesalpha.onrender.com/favicon.ico' });
+    cbProvider = sdk.makeWeb3Provider('https://mainnet.base.org', 8453);
+  }
+} catch(e) {}
+
+async function getProvider() {
+  if (window.ethereum) return window.ethereum;
+  if (cbProvider) return cbProvider;
+  return null;
+}
+
+async function sendUSDC(provider, amount) {
+  const accounts = await provider.request({method:'eth_requestAccounts'});
+  try { await provider.request({method:'wallet_switchEthereumChain',params:[{chainId:BASE_CHAIN_ID}]}); }
+  catch(sw) { if (sw.code===4902||sw.code===-32603) await provider.request({method:'wallet_addEthereumChain',params:[{chainId:BASE_CHAIN_ID,chainName:'Base',nativeCurrency:{name:'ETH',symbol:'ETH',decimals:18},rpcUrls:['https://mainnet.base.org'],blockExplorerUrls:['https://basescan.org']}]}); else throw sw; }
+  const data = '0xa9059cbb' + WALLET.slice(2).toLowerCase().padStart(64,'0') + BigInt(Math.round(amount*1e6)).toString(16).padStart(64,'0');
+  const txHash = await provider.request({method:'eth_sendTransaction',params:[{from:accounts[0],to:BASE_USDC,data}]});
+  fetch('/api/payment/confirm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:'Tribute',amount,txHash,from:accounts[0],timestamp:new Date().toISOString()})}).catch(()=>{});
+  return txHash;
+}
+
+async function payWithCrypto(name, amount) {
+  const provider = await getProvider();
+  if (provider) {
+    try {
+      const btn = document.getElementById('crypto-btn');
+      const orig = btn.textContent;
+      btn.textContent = 'CONNECTING WALLET...'; btn.disabled = true;
+      const txHash = await sendUSDC(provider, amount);
+      btn.textContent = 'TX SENT!'; btn.style.background = '#22C55E';
+      alert('Payment sent!\nTx: ' + txHash + '\n\nThank you for supporting Achilles!');
+      setTimeout(()=>window.open('https://basescan.org/tx/'+txHash,'_blank'),1500);
+    } catch(err) {
+      if (err.code===4001) { document.getElementById('crypto-btn').textContent='PAY WITH USDC \u2014 '+amount+' USDC'; document.getElementById('crypto-btn').disabled=false; return; }
+      document.getElementById('crypto-btn').textContent='PAY WITH USDC \u2014 '+amount+' USDC'; document.getElementById('crypto-btn').disabled=false;
+      showWalletOptions(amount);
+    }
+  } else { showWalletOptions(amount); }
+}
+
+function showWalletOptions(amount) {
+  document.getElementById('wallet-product-name').textContent = 'Tribute \u2014 ' + amount + ' USDC';
+  document.getElementById('wallet-amount').textContent = amount;
+  document.getElementById('wallet-modal').dataset.amount = amount;
+  document.getElementById('wallet-modal').classList.add('active');
+}
+
+function connectMetaMask() {
+  document.getElementById('wallet-modal').classList.remove('active');
+  window.open('https://metamask.app.link/dapp/'+window.location.host+window.location.pathname,'_blank');
+}
+
+function connectCoinbase() {
+  document.getElementById('wallet-modal').classList.remove('active');
+  if (cbProvider) {
+    const am = parseFloat(document.getElementById('wallet-modal').dataset.amount);
+    sendUSDC(cbProvider, am).then(tx => { alert('Sent! Tx: '+tx); setTimeout(()=>window.open('https://basescan.org/tx/'+tx,'_blank'),1500); }).catch(()=>showManualModal());
+  } else { window.open('https://go.cb-w.com/dapp?cb_url='+encodeURIComponent(window.location.href),'_blank'); }
+}
+
+function showManualModal() {
+  document.getElementById('manual-amount').textContent = selectedAmount;
+  document.getElementById('crypto-modal').classList.add('active');
+}
+
+function copyAddress() {
+  navigator.clipboard.writeText('0x069c6012E053DFBf50390B19FaE275aD96D22ed7');
+  const btn = document.querySelector('.copy-btn');
+  btn.textContent = 'COPIED!';
+  setTimeout(() => btn.textContent = 'COPY ADDRESS', 2000);
+}
+
+document.getElementById('crypto-modal').addEventListener('click', function(e) { if (e.target===this) this.classList.remove('active'); });
+document.getElementById('wallet-modal').addEventListener('click', function(e) { if (e.target===this) this.classList.remove('active'); });
+</script>
+</body>
+</html>

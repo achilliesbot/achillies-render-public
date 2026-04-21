@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>All Endpoints — Achilles x402</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#080c08;--gold:#c9a227;--gold-dim:#8a6f1a;--green:#22c55e;--green-dim:#166534;--red:#ef4444;--blue:#3b82f6;--purple:#a855f7;--dim:#555;--card:#0d120d;--card-border:#1a241a;--text:#e8e8e8}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,12,8,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+  .nav-logo{font-family:'Press Start 2P',cursive;font-size:13px;color:var(--gold);text-decoration:none}
+  .nav-links{display:flex;gap:18px}
+  .nav-links a{color:var(--dim);text-decoration:none;font-size:12px;letter-spacing:.5px;font-weight:500;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+  .hamburger{display:none;background:none;border:1px solid var(--card-border);color:var(--gold);font-size:18px;padding:4px 10px;border-radius:4px;cursor:pointer}
+
+  .page{max-width:960px;margin:0 auto;padding:100px 24px 60px}
+  .page h1{font-family:'Press Start 2P',cursive;font-size:22px;color:var(--gold);margin-bottom:8px}
+  .page .subtitle{color:var(--dim);font-size:14px;margin-bottom:36px;line-height:1.6}
+
+  .stats-bar{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:36px}
+  .stat-pill{background:var(--card);border:1px solid var(--card-border);border-radius:8px;padding:14px 20px;flex:1;min-width:140px}
+  .stat-pill .num{font-size:22px;font-weight:700;color:var(--gold);font-family:'Press Start 2P',cursive;margin-bottom:4px}
+  .stat-pill .lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+
+  .section-label{font-family:'Press Start 2P',cursive;font-size:12px;color:var(--gold);margin:32px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--card-border)}
+
+  .endpoint-grid{display:flex;flex-direction:column;gap:12px}
+  .ep-card{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:20px;transition:border-color .2s}
+  .ep-card:hover{border-color:var(--gold-dim)}
+  .ep-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}
+  .ep-method{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px}
+  .ep-method.post{background:rgba(34,197,94,0.12);color:var(--green);border:1px solid rgba(34,197,94,0.2)}
+  .ep-method.get{background:rgba(59,130,246,0.12);color:var(--blue);border:1px solid rgba(59,130,246,0.2)}
+  .ep-path{font-family:monospace;font-size:13px;color:var(--text);font-weight:500}
+  .ep-price{margin-left:auto;font-family:'Press Start 2P',cursive;font-size:11px;color:var(--gold)}
+  .ep-price.free{color:var(--green)}
+  .ep-desc{color:var(--dim);font-size:13px;line-height:1.5}
+  .ep-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .ep-tag{font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(201,162,39,0.08);color:var(--gold-dim);border:1px solid rgba(201,162,39,0.12)}
+
+  .protocol-box{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:24px;margin-top:36px}
+  .protocol-box h3{color:var(--gold);font-size:14px;margin-bottom:12px}
+  .protocol-box p{color:var(--dim);font-size:13px;line-height:1.7;margin-bottom:8px}
+  .protocol-box code{color:var(--green);background:rgba(34,197,94,0.08);padding:2px 6px;border-radius:3px;font-size:12px}
+
+  .wallet-box{background:rgba(201,162,39,0.04);border:1px solid rgba(201,162,39,0.15);border-radius:10px;padding:20px;margin-top:24px;text-align:center}
+  .wallet-box .addr{font-family:monospace;font-size:12px;color:var(--gold);word-break:break-all;margin:8px 0}
+  .wallet-box .net{font-size:10px;color:var(--green);letter-spacing:1px;font-weight:600}
+
+  footer{text-align:center;padding:40px 28px;border-top:1px solid var(--card-border);font-size:11px;color:#333;margin-top:60px}
+  footer a{color:var(--dim);text-decoration:none;margin:0 8px}
+  footer a:hover{color:var(--gold)}
+
+  @media(max-width:640px){
+    .nav-links{display:none}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:52px;right:16px;background:rgba(8,12,8,.97);border:1px solid var(--card-border);border-radius:8px;padding:14px 18px;gap:12px}
+    .hamburger{display:block}
+    .page h1{font-size:16px}
+    .ep-top{flex-direction:column;align-items:flex-start}
+    .ep-price{margin-left:0}
+    .stat-pill{min-width:100%}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">ACHILLES</a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+  <div class="nav-links">
+    <a href="/">HOME</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/strategos">STRATEGOS</a><a href="/docs">DOCS</a><a href="/noleak">NOLEAK</a><a href="/flowcore">FLOWCORE</a><a href="/pnl">INTEL</a><a href="/olympus">ARMY</a>
+  </div>
+</nav>
+
+<div class="page">
+  <h1>ALL ENDPOINTS</h1>
+  <p class="subtitle">Every service Achilles exposes. Paid endpoints use x402 — USDC on Base Mainnet. No accounts, no API keys, just sign and send.</p>
+
+  <div class="stats-bar">
+    <div class="stat-pill"><div class="num">13</div><div class="lbl">Paid Endpoints</div></div>
+    <div class="stat-pill"><div class="num">4</div><div class="lbl">Free Endpoints</div></div>
+    <div class="stat-pill"><div class="num">USDC</div><div class="lbl">Base Mainnet</div></div>
+  </div>
+
+  <!-- EP AGENTIAM -->
+  <div class="section-label">EP AGENTIAM — Identity & Access</div>
+  <div class="endpoint-grid">
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/validate</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Full policy validation for agent proposals. Checks trade limits, leverage caps, stop-loss rules. Returns violation list and risk score.</div>
+      <div class="ep-tags"><span class="ep-tag">validation</span><span class="ep-tag">policy</span><span class="ep-tag">risk</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/risk-check</span>
+        <span class="ep-price">$0.005</span>
+      </div>
+      <div class="ep-desc">Quick risk assessment for any agent action. Lightweight pre-flight check before execution.</div>
+      <div class="ep-tags"><span class="ep-tag">risk</span><span class="ep-tag">quick-check</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/noleak</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Execution integrity verification. Tamper detection and data leak prevention for agent actions. Returns proof hash.</div>
+      <div class="ep-tags"><span class="ep-tag">integrity</span><span class="ep-tag">tamper-detect</span><span class="ep-tag">proof</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/memguard</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Memory state verification. Detects drift, corruption, and unauthorized modifications in agent memory.</div>
+      <div class="ep-tags"><span class="ep-tag">memory</span><span class="ep-tag">verification</span><span class="ep-tag">drift</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/riskoracle</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Pre-action risk scoring with multi-factor analysis. Evaluates risk before any agent execution proceeds.</div>
+      <div class="ep-tags"><span class="ep-tag">risk</span><span class="ep-tag">scoring</span><span class="ep-tag">pre-action</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/secureexec</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Sandboxed tool execution with cryptographic proof hash generation. Isolated runtime for agent tool calls.</div>
+      <div class="ep-tags"><span class="ep-tag">execution</span><span class="ep-tag">sandbox</span><span class="ep-tag">proof</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/flowcore</span>
+        <span class="ep-price">$0.02</span>
+      </div>
+      <div class="ep-desc">Full orchestration pipeline — NoLeak + RiskOracle + SecureExec + MemGuard in a single call. Best value for complete verification.</div>
+      <div class="ep-tags"><span class="ep-tag">orchestration</span><span class="ep-tag">pipeline</span><span class="ep-tag">best-value</span></div>
+    </div>
+  </div>
+
+  <!-- DELPHI -->
+  <div class="section-label">DELPHI — Intelligence</div>
+  <div class="endpoint-grid">
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/delphi</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Real-time intelligence signals. AI-curated feed across crypto, agents, DeFi, and macro. Structured JSON with confidence scores.</div>
+      <div class="ep-tags"><span class="ep-tag">intelligence</span><span class="ep-tag">signals</span><span class="ep-tag">real-time</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/delphi/graph/entity</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Knowledge graph entity lookup. Returns relationships, connections, and temporal history for any entity.</div>
+      <div class="ep-tags"><span class="ep-tag">knowledge-graph</span><span class="ep-tag">entity</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/delphi/graph/query</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Knowledge graph query by relationship type. Find connections between entities across the intelligence network.</div>
+      <div class="ep-tags"><span class="ep-tag">knowledge-graph</span><span class="ep-tag">query</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/delphi/graph/timeline</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Chronological entity history. Track how relationships and intelligence evolve over time.</div>
+      <div class="ep-tags"><span class="ep-tag">knowledge-graph</span><span class="ep-tag">timeline</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/x402/delphi/graph/contradictions</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Intelligence contradiction detection. Surfaces conflicting signals across the knowledge graph.</div>
+      <div class="ep-tags"><span class="ep-tag">knowledge-graph</span><span class="ep-tag">contradictions</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/api/v1/research</span>
+        <span class="ep-price">$0.05</span>
+      </div>
+      <div class="ep-desc">Structured intelligence brief on any topic. Deep research with sourced analysis. Highest-value single call.</div>
+      <div class="ep-tags"><span class="ep-tag">research</span><span class="ep-tag">deep-analysis</span><span class="ep-tag">premium</span></div>
+    </div>
+  </div>
+
+  <!-- STRATEGOS -->
+  <div class="section-label">STRATEGOS — Agent PM</div>
+  <div class="endpoint-grid">
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/api/tasks</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Create and assign tasks to agent teams. Weighted routing by capability, capacity, success rate, and cost.</div>
+      <div class="ep-tags"><span class="ep-tag">task-mgmt</span><span class="ep-tag">routing</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/api/workflows</span>
+        <span class="ep-price">$0.02</span>
+      </div>
+      <div class="ep-desc">Create DAG workflows with dependencies, approval gates, and EVM tracking. Full PMP-compliant project management.</div>
+      <div class="ep-tags"><span class="ep-tag">workflow</span><span class="ep-tag">DAG</span><span class="ep-tag">EVM</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/api/agents</span>
+        <span class="ep-price">$0.05</span>
+      </div>
+      <div class="ep-desc">Register an agent with capabilities, protocols, and cost profile. One-time registration for task routing eligibility.</div>
+      <div class="ep-tags"><span class="ep-tag">registration</span><span class="ep-tag">agent</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/api/a2a</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">A2A JSON-RPC 2.0 endpoint. Send tasks, get status, list agents — full inter-agent communication protocol.</div>
+      <div class="ep-tags"><span class="ep-tag">A2A</span><span class="ep-tag">JSON-RPC</span><span class="ep-tag">protocol</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/api/risks</span>
+        <span class="ep-price">$0.005</span>
+      </div>
+      <div class="ep-desc">Add risks to the project risk register. Probability x impact scoring with mitigation tracking.</div>
+      <div class="ep-tags"><span class="ep-tag">risk</span><span class="ep-tag">register</span></div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method post">POST</span>
+        <span class="ep-path">/api/risks/detect</span>
+        <span class="ep-price">$0.01</span>
+      </div>
+      <div class="ep-desc">Automated risk detection. Scans workflow state and generates risk assessments with mitigation recommendations.</div>
+      <div class="ep-tags"><span class="ep-tag">risk</span><span class="ep-tag">detection</span><span class="ep-tag">auto</span></div>
+    </div>
+  </div>
+
+  <!-- FREE -->
+  <div class="section-label">FREE ENDPOINTS</div>
+  <div class="endpoint-grid">
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method get">GET</span>
+        <span class="ep-path">/x402/status</span>
+        <span class="ep-price free">FREE</span>
+      </div>
+      <div class="ep-desc">x402 protocol status, pricing info, and endpoint directory. Machine-readable JSON.</div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method get">GET</span>
+        <span class="ep-path">/ep/status</span>
+        <span class="ep-price free">FREE</span>
+      </div>
+      <div class="ep-desc">EP AgentIAM system status. Uptime, version, and service health.</div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method get">GET</span>
+        <span class="ep-path">/ep/health</span>
+        <span class="ep-price free">FREE</span>
+      </div>
+      <div class="ep-desc">Health check endpoint. Returns 200 if the system is operational.</div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method get">GET</span>
+        <span class="ep-path">/delphi</span>
+        <span class="ep-price free">FREE</span>
+      </div>
+      <div class="ep-desc">DELPHI intelligence dashboard. Browser-based signal viewer.</div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-top">
+        <span class="ep-method get">GET</span>
+        <span class="ep-path">/.well-known/agent.json</span>
+        <span class="ep-price free">FREE</span>
+      </div>
+      <div class="ep-desc">A2A Agent Card discovery. Machine-readable agent capabilities and protocol support.</div>
+    </div>
+  </div>
+
+  <!-- HOW TO PAY -->
+  <div class="protocol-box">
+    <h3>How to Pay</h3>
+    <p>All paid endpoints use the <strong style="color:var(--text)">x402 protocol</strong>. Send a POST — if payment is required, you'll get an HTTP 402 response with USDC payment instructions.</p>
+    <p>Automatic payment with <code>@x402/fetch</code> or <code>@x402/axios</code>. Or manually sign a USDC transfer on Base and include the proof in <code>X-402-Payment</code> header.</p>
+    <p>Strategos endpoints also accept <code>Authorization: Bearer stg_...</code> API keys as an alternative to x402.</p>
+  </div>
+
+  <div class="wallet-box">
+    <div style="font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:1px">Treasury Wallet</div>
+    <div class="addr">0x069c6012E053DFBf50390B19FaE275aD96D22ed7</div>
+    <div class="net">BASE MAINNET &middot; USDC</div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <a href="/">ACHILLES</a><a href="/ep">EP</a><a href="/delphi">DELPHI</a><a href="/strategos">STRATEGOS</a><a href="/endpoints">ENDPOINTS</a><a href="/docs">DOCS</a><a href="https://x.com/achillesalphaai" target="_blank">@AchillesAlphaAI</a>
+  </div>
+  <div style="margin-top:8px;color:#1a1a1a">Achilles &middot; Project Olympus &middot; Base Mainnet</div>
+</footer>
+
+</body>
+</html>

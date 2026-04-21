@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8XZ094X6YT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-8XZ094X6YT");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowCore — Full Orchestration Pipeline | Achilles</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080C08;color:#e0e0e0;font-family:'Inter',sans-serif;min-height:100vh}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid #1a241a;position:sticky;top:0;background:rgba(8,12,8,0.95);backdrop-filter:blur(10px);z-index:100}
+.nav-brand{font-family:'Press Start 2P',monospace;font-size:0.7rem;color:#F59E0B;text-decoration:none}
+.nav-links{display:flex;gap:20px}
+.nav-links a{color:#888;text-decoration:none;font-size:0.6rem;font-family:'Press Start 2P',monospace;transition:color 0.2s}
+.nav-links a:hover,.nav-links a.active{color:#F59E0B}
+.nav-toggle{display:none;background:none;border:none;color:#F59E0B;font-size:1.5rem;cursor:pointer;padding:0.25rem}
+
+/* LAYOUT */
+.container{max-width:960px;margin:0 auto;padding:3rem 2rem}
+
+/* HERO */
+.hero{text-align:center;padding:3rem 0 2rem}
+.hero h1{font-family:'Press Start 2P',monospace;font-size:clamp(0.8rem,2.5vw,1.3rem);color:#fff;margin-bottom:0.75rem;line-height:1.8}
+.hero h1 span{color:#F59E0B}
+.hero-sub{font-size:1rem;color:#aaa;margin-top:0.5rem;line-height:1.7;max-width:700px;margin-left:auto;margin-right:auto}
+.badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:20px;padding:0.4rem 1rem;font-size:0.7rem;color:#22C55E;margin-top:1rem}
+.dot{width:8px;height:8px;border-radius:50%;background:#22C55E;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* FLOW DIAGRAM ANIMATION */
+.flow-wrap{margin:3rem auto;padding:2rem 0;overflow-x:auto}
+.flow-diagram{display:flex;align-items:center;justify-content:center;gap:0;min-width:700px;margin:0 auto;position:relative}
+.flow-node{width:90px;height:90px;border-radius:50%;background:#0e130e;border:2px solid #1a241a;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;z-index:2;transition:border-color 0.4s,box-shadow 0.4s}
+.flow-node:nth-child(1){animation:nodeActivate 4s ease-in-out infinite 0s}
+.flow-node:nth-child(3){animation:nodeActivate 4s ease-in-out infinite 0.8s}
+.flow-node:nth-child(5){animation:nodeActivate 4s ease-in-out infinite 1.6s}
+.flow-node:nth-child(7){animation:nodeActivate 4s ease-in-out infinite 2.4s}
+@keyframes nodeActivate{0%,100%{border-color:#1a241a;box-shadow:none}25%,35%{border-color:#F59E0B;box-shadow:0 0 20px rgba(245,158,11,0.3),0 0 40px rgba(245,158,11,0.1)}}
+.flow-node .node-icon{font-size:1.5rem;margin-bottom:0.2rem}
+.flow-node .node-label{font-family:'Press Start 2P',monospace;font-size:0.35rem;color:#F59E0B;letter-spacing:0.03em;text-align:center;line-height:1.4}
+.flow-line{width:60px;height:3px;position:relative;overflow:hidden;flex-shrink:0;z-index:1}
+.flow-line .line-track{width:100%;height:1px;background:#1a241a;position:absolute;top:1px;left:0}
+.flow-line .line-pulse{position:absolute;top:0;left:-16px;width:16px;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,#F59E0B,transparent);box-shadow:0 0 10px rgba(245,158,11,0.6);animation:flowPulse 2s linear infinite}
+.flow-line:nth-of-type(2) .line-pulse{animation-delay:0s}
+.flow-line:nth-of-type(4) .line-pulse{animation-delay:0.5s}
+.flow-line:nth-of-type(6) .line-pulse{animation-delay:1.0s}
+@keyframes flowPulse{0%{left:-16px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:calc(100% + 4px);opacity:0}}
+
+/* SECTIONS */
+section{margin:2.5rem 0}
+section h2{font-family:'Press Start 2P',monospace;font-size:0.65rem;color:#F59E0B;margin-bottom:1.25rem;letter-spacing:0.1em}
+
+/* EXPLAINER */
+.explainer{background:#0e130e;border:1px solid #1a241a;border-radius:12px;padding:2rem;margin:2rem 0}
+.explainer p{color:#aaa;font-size:0.9rem;line-height:1.8}
+.explainer strong{color:#F59E0B}
+
+/* 4-SERVICE BREAKDOWN */
+.service-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0}
+.step-card{background:#0e130e;border:1px solid #1a241a;border-radius:12px;padding:1.5rem 1rem;text-align:center;position:relative;transition:border-color 0.3s,transform 0.3s}
+.step-card:hover{border-color:rgba(245,158,11,0.4);transform:translateY(-3px)}
+.step-num{font-family:'Press Start 2P',monospace;font-size:0.5rem;color:#22C55E;margin-bottom:0.5rem}
+.step-icon{font-size:1.5rem;margin-bottom:0.5rem}
+.step-card h3{font-family:'Press Start 2P',monospace;font-size:0.45rem;color:#F59E0B;margin-bottom:0.6rem;line-height:1.6}
+.step-card p{color:#aaa;font-size:0.8rem;line-height:1.6}
+.step-price{font-family:'Courier New',monospace;font-size:0.75rem;color:#22C55E;margin-top:0.75rem;font-weight:700}
+
+/* SAVINGS BOX */
+.savings-box{background:rgba(245,158,11,0.06);border:2px solid rgba(245,158,11,0.25);border-radius:12px;padding:1.5rem;text-align:center;margin:1.5rem 0}
+.savings-box .savings-math{font-family:'Courier New',monospace;font-size:0.9rem;color:#e0e0e0;line-height:2}
+.savings-box .savings-math .strike{text-decoration:line-through;color:#888}
+.savings-box .savings-math .highlight{color:#F59E0B;font-weight:700;font-size:1.1rem}
+.savings-box .savings-label{font-family:'Press Start 2P',monospace;font-size:0.5rem;color:#22C55E;margin-top:0.75rem}
+
+/* PRICING */
+.pricing-box{background:#0e130e;border:1px solid #1a241a;border-radius:12px;padding:2.5rem;text-align:center}
+.price-tag{font-family:'Press Start 2P',monospace;font-size:1.4rem;color:#F59E0B;margin-bottom:0.6rem}
+.price-tagline{font-family:'Press Start 2P',monospace;font-size:0.5rem;color:#22C55E;margin-bottom:0.75rem}
+.price-desc{color:#aaa;font-size:0.9rem;margin-bottom:0.25rem}
+.price-method{color:#22C55E;font-size:0.75rem;font-family:'Courier New',monospace;margin-top:0.75rem}
+
+/* CODE BLOCK */
+.code-block{background:rgba(0,0,0,0.5);border:1px solid #1a241a;border-radius:10px;padding:1.25rem;font-family:'Courier New',monospace;font-size:0.75rem;color:#e0e0e0;overflow-x:auto;white-space:pre;line-height:1.7}
+.code-block .k{color:#F59E0B}
+.code-block .s{color:#22C55E}
+.code-block .n{color:#d19a66}
+.code-block .c{color:#555}
+
+/* CTA */
+.cta-row{display:flex;gap:1rem;margin:2.5rem 0;justify-content:center;flex-wrap:wrap}
+.btn-primary{display:inline-block;padding:0.8rem 2rem;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;background:#F59E0B;color:#080C08;transition:all 0.2s;font-family:'Inter',sans-serif}
+.btn-secondary{display:inline-block;padding:0.8rem 2rem;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;border:1px solid rgba(245,158,11,0.4);color:#F59E0B;transition:all 0.2s;font-family:'Inter',sans-serif}
+.btn-primary:hover,.btn-secondary:hover{opacity:0.85;transform:translateY(-2px)}
+
+/* FOOTER */
+footer{border-top:1px solid #1a241a;padding:2rem;text-align:center;margin-top:3rem}
+.footer-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.footer-links a{color:#888;text-decoration:none;font-size:0.55rem;font-family:'Press Start 2P',monospace;transition:color 0.2s}
+.footer-links a:hover{color:#F59E0B}
+.footer-copy{color:#555;font-size:0.75rem}
+.footer-copy a{color:#F59E0B;text-decoration:none}
+
+/* MOBILE */
+@media(max-width:768px){
+    nav{padding:1rem;flex-wrap:wrap;gap:0.5rem}
+    .nav-toggle{display:block}
+    .nav-links{display:none;width:100%;flex-direction:column;gap:0.75rem;padding:0.75rem 0;border-top:1px solid #1a241a;margin-top:0.5rem}
+    .nav-links.open{display:flex}
+    .nav-links a{font-size:0.55rem;padding:0.25rem 0}
+    .container{padding:1.5rem 1rem}
+    .hero h1{font-size:clamp(0.6rem,4vw,1rem);line-height:2}
+    .hero-sub{font-size:0.85rem}
+    .service-steps{grid-template-columns:1fr}
+    .flow-wrap{padding:1rem 0}
+    .cta-row{flex-direction:column;align-items:stretch}
+    .btn-primary,.btn-secondary{text-align:center;width:100%}
+    section{margin:1.5rem 0}
+    .code-block{font-size:0.65rem}
+    .footer-links{flex-direction:column;gap:0.5rem}
+    .explainer{padding:1.25rem}
+}
+@media(min-width:769px) and (max-width:1024px){
+    .container{padding:2rem 1.5rem}
+    .service-steps{grid-template-columns:repeat(2,1fr)}
+    .nav-links a{font-size:0.5rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="nav-brand">ACHILLES</a>
+    <button class="nav-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+        <a href="/">HOME</a>
+        <a href="/ep">EP</a>
+        <a href="/delphi">DELPHI</a>
+        <a href="/docs">DOCS</a>
+        <a href="/noleak">NOLEAK</a>
+        <a href="/flowcore" class="active">FLOWCORE</a>
+        <a href="/pnl">INTEL</a>
+        <a href="/olympus">ARMY</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="hero">
+        <h1>FlowCore &mdash; <span>Full Orchestration Pipeline</span></h1>
+        <p class="hero-sub">Chain all four EP services in a single call. Integrity, risk, execution, and memory verification &mdash; one pipeline, one price.</p>
+        <div class="badge"><span class="dot"></span> Operational on Base Mainnet</div>
+    </div>
+
+    <!-- FLOW DIAGRAM ANIMATION -->
+    <div class="flow-wrap">
+        <div class="flow-diagram">
+            <div class="flow-node">
+                <div class="node-icon">&#128274;</div>
+                <div class="node-label">NOLEAK</div>
+            </div>
+            <div class="flow-line"><div class="line-track"></div><div class="line-pulse"></div></div>
+            <div class="flow-node">
+                <div class="node-icon">&#9888;&#65039;</div>
+                <div class="node-label">RISK<br>ORACLE</div>
+            </div>
+            <div class="flow-line"><div class="line-track"></div><div class="line-pulse"></div></div>
+            <div class="flow-node">
+                <div class="node-icon">&#128737;</div>
+                <div class="node-label">SECURE<br>EXEC</div>
+            </div>
+            <div class="flow-line"><div class="line-track"></div><div class="line-pulse"></div></div>
+            <div class="flow-node">
+                <div class="node-icon">&#129504;</div>
+                <div class="node-label">MEM<br>GUARD</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WHAT IT DOES -->
+    <section>
+        <h2>// WHAT IT DOES</h2>
+        <div class="explainer">
+            <p><strong>FlowCore</strong> chains all four EP AgentIAM services into a single orchestrated pipeline. One API call triggers the full pre-execution security stack:</p>
+            <br>
+            <p><strong>1. NoLeak</strong> checks execution integrity &mdash; should this action run right now? It scores the signal against historical patterns and returns a go/no-go decision with a cryptographic proof hash.</p>
+            <br>
+            <p><strong>2. RiskOracle</strong> scores risk before execution &mdash; evaluating capital exposure, market conditions, and action-specific danger signals. High-risk actions get flagged before they cost you.</p>
+            <br>
+            <p><strong>3. SecureExec</strong> runs the tool in a sandboxed environment &mdash; fully isolated from the host system. Every result is SHA-256 hashed and timestamped for verifiable proof.</p>
+            <br>
+            <p><strong>4. MemGuard</strong> verifies memory state after execution &mdash; confirming no state corruption, no hallucinated memories, and no drift from the agent's intended state.</p>
+            <br>
+            <p>The result: <strong>complete pre-and-post execution security</strong> for any autonomous agent action. One call. Four layers. Full accountability.</p>
+        </div>
+    </section>
+
+    <!-- 4-SERVICE BREAKDOWN -->
+    <section>
+        <h2>// THE PIPELINE</h2>
+        <div class="service-steps">
+            <div class="step-card">
+                <div class="step-num">STEP 1</div>
+                <div class="step-icon">&#128274;</div>
+                <h3>NoLeak</h3>
+                <p>Execution integrity check. Should this action run right now?</p>
+                <div class="step-price">$0.01</div>
+            </div>
+            <div class="step-card">
+                <div class="step-num">STEP 2</div>
+                <div class="step-icon">&#9888;&#65039;</div>
+                <h3>RiskOracle</h3>
+                <p>Pre-action risk scoring. Capital exposure and danger signals.</p>
+                <div class="step-price">$0.01</div>
+            </div>
+            <div class="step-card">
+                <div class="step-num">STEP 3</div>
+                <div class="step-icon">&#128737;</div>
+                <h3>SecureExec</h3>
+                <p>Sandboxed tool execution with SHA-256 proof generation.</p>
+                <div class="step-price">$0.01</div>
+            </div>
+            <div class="step-card">
+                <div class="step-num">STEP 4</div>
+                <div class="step-icon">&#129504;</div>
+                <h3>MemGuard</h3>
+                <p>Post-execution memory state verification. No corruption.</p>
+                <div class="step-price">$0.01</div>
+            </div>
+        </div>
+
+        <div class="savings-box">
+            <div class="savings-math">
+                Individual: <span class="strike">$0.01 + $0.01 + $0.01 + $0.01 = $0.04</span><br>
+                FlowCore: <span class="highlight">$0.02</span>
+            </div>
+            <div class="savings-label">RUN ALL 4 FOR THE PRICE OF 2</div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section>
+        <h2>// PRICING</h2>
+        <div class="pricing-box">
+            <div class="price-tag">$0.02 / call</div>
+            <div class="price-tagline">Run all 4 for the price of 2</div>
+            <p class="price-desc">Full orchestration pipeline. No subscriptions. No minimums.</p>
+            <p class="price-method">x402 &bull; USDC on Base Mainnet</p>
+        </div>
+    </section>
+
+    <!-- API EXAMPLE -->
+    <section>
+        <h2>// API</h2>
+        <div class="code-block"><span class="k">POST</span> /x402/flowcore
+
+<span class="k">Headers:</span>
+  Content-Type: application/json
+  X-402-Payment: USDC-Base
+
+<span class="k">Body:</span>
+{
+  <span class="k">"action"</span>: <span class="s">"execute_trade"</span>,
+  <span class="k">"params"</span>: {
+    <span class="k">"symbol"</span>: <span class="s">"ETH"</span>,
+    <span class="k">"amount"</span>: <span class="n">500</span>
+  },
+  <span class="k">"agent_id"</span>: <span class="s">"trading-agent"</span>
+}
+
+<span class="k">Response:</span>
+{
+  <span class="k">"pipeline"</span>: <span class="s">"complete"</span>,
+  <span class="k">"noleak"</span>: { <span class="k">"shouldExecute"</span>: <span class="n">true</span>, <span class="k">"score"</span>: <span class="n">0.87</span> },
+  <span class="k">"risk_oracle"</span>: { <span class="k">"risk_level"</span>: <span class="s">"low"</span>, <span class="k">"score"</span>: <span class="n">0.12</span> },
+  <span class="k">"secure_exec"</span>: { <span class="k">"status"</span>: <span class="s">"executed"</span>, <span class="k">"proof"</span>: <span class="s">"sha256:a1b2c3..."</span> },
+  <span class="k">"mem_guard"</span>: { <span class="k">"state"</span>: <span class="s">"verified"</span>, <span class="k">"drift"</span>: <span class="n">0.0</span> },
+  <span class="k">"total_latency_ms"</span>: <span class="n">89</span>,
+  <span class="k">"cost_usdc"</span>: <span class="n">0.02</span>
+}</div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-row">
+        <a href="/ep" class="btn-primary">Run the Full Suite</a>
+        <a href="/" class="btn-secondary">View Individual Services</a>
+    </div>
+
+</div>
+
+<footer>
+    <div class="footer-links">
+        <a href="/">HOME</a>
+        <a href="/ep">EP</a>
+        <a href="/delphi">DELPHI</a>
+        <a href="/docs">DOCS</a>
+        <a href="/noleak">NOLEAK</a>
+        <a href="/flowcore">FLOWCORE</a>
+        <a href="/pnl">INTEL</a>
+        <a href="/olympus">ARMY</a>
+    </div>
+    <p class="footer-copy">Achilles &mdash; Autonomous Orchestrator &bull; <a href="https://twitter.com/AchillesAlphaAI" target="_blank">@AchillesAlphaAI</a></p>
+</footer>
+
+<script>
+document.querySelector('.nav-toggle').addEventListener('click',function(){document.querySelector('.nav-links').classList.toggle('open')});
+</script>
+</body>
+</html>

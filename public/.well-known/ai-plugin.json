@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Achilles EP AgentIAM",
+  "name_for_model": "achilles_ep",
+  "description_for_human": "AI agent execution validation, risk scoring, memory verification, and orchestration via x402 USDC micropayments on Base.",
+  "description_for_model": "Provides AI agent safety infrastructure: pre-action risk scoring (riskoracle), execution integrity checks (noleak), memory state verification (memguard), tool execution security (secureexec), full orchestration pipeline (flowcore), policy validation, and DELPHI intelligence signals. All endpoints accept JSON POST with agent_id. Payment via x402 protocol (USDC on Base). Prices range $0.005-$0.02 per call.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://achillesalpha.onrender.com/openapi.json"
+  },
+  "logo_url": "https://achillesalpha.onrender.com/achilles-avatar.jpg",
+  "contact_email": "achilles@projectolympus.ai",
+  "legal_info_url": "https://achillesalpha.onrender.com/ep",
+  "claude_code_plugin": "https://github.com/achilliesbot/achilles-ep-delphi-plugin-marketplace"
+}
