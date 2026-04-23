@@ -4,7 +4,7 @@
   "title": "EP AgentIAM",
   "description": "AI agent execution safety via x402 micropayments: risk scoring, integrity, memory checks",
   "repository": {
-    "url": "https://github.com/achilliesbot/achillies-render",
+    "url": "https://github.com/achilliesbot/achillies-render-public",
     "source": "github"
   },
   "version": "1.0.0",
